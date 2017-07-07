@@ -5,11 +5,6 @@ namespace SalesforceHelper;
 use SalesforceHelper\Exceptions\SalesforceException;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-
-use BlackmoreBond\Notifications\FailedToSendSF;
-use BlackmoreBond\User;
-use Notification;
 
 class EnterpriseClient
 {
@@ -76,11 +71,6 @@ class EnterpriseClient
     /**
      * @var string
      */
-    protected $bbOwnerId;
-
-    /**
-     * @var string
-     */
     protected $objName;
 
     /**
@@ -102,7 +92,6 @@ class EnterpriseClient
         $this->opportunityRecord = config('salesforce.oppurtunityrecordtypeid');
         $this->taskRecord = config('salesforce.taskrecordtypeid');
         $this->brandName = config('salesforce.brand');
-        $this->bbOwnerId = config('salesforce.bb_owner_id');
 
         $this->client = new Client([
             'headers' => [
@@ -156,14 +145,7 @@ class EnterpriseClient
 
         $requestOptions = array_merge($defaultOptions, $options);
 
-        $response = false;
-        try {
-            $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
-        } catch (ClientException $e) {
-            $devUsers = new User();
-            $devUsers = $devUsers->getUsersWithPermission('emails_received_dev');
-            Notification::send($devUsers, new FailedToSendSF($e->getMessage(), $requestOptions));
-        }
+        $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
 
         if ($logRequest) {
             activity()
