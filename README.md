@@ -16,6 +16,6 @@ This package makes it easy to communicate with Salesfoce.
 You can install the package via composer:
 
 ``` bash
-composer require laravel-notification-channels/webpush
+composer require laravel-salesforce/helper: "dev-master"
 ```
 

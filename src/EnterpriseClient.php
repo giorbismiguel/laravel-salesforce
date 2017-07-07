@@ -125,16 +125,6 @@ class EnterpriseClient
             return false;
         }
 
-        if ($logRequest) {
-            activity()
-                ->withProperties([
-                    'ip_address'   => request()->ip(),
-                    'user_agent'   => getUserAgent(),
-                    'request_body' => $options,
-                ])
-                ->log('Salesforce - ' . get_class($this) . ' - REQUEST URL:' . $url . '');
-        }
-
         $defaultOptions = [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->accessToken,
@@ -146,16 +136,6 @@ class EnterpriseClient
         $requestOptions = array_merge($defaultOptions, $options);
 
         $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
-
-        if ($logRequest) {
-            activity()
-                ->withProperties([
-                    'ip_address'    => request()->ip(),
-                    'user_agent'    => getUserAgent(),
-                    'response_body' => $response ? \GuzzleHttp\json_decode($response) : '',
-                ])
-                ->log('Salesforce - ' . get_class($this) . ' - RESPONSE URL:' . $url . '');
-        }
 
         if (!$response) {
             return null;

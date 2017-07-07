@@ -1,5 +1,5 @@
 {
-    "name": "laravel-salesforce/helper",
+    "name": "surge-financial/salesforce-laravel",
     "description": "Salesforce helper for Laravel",
     "homepage": "https://github.com/",
     "license": "MIT",
