@@ -4,6 +4,9 @@ namespace SalesforceHelper;
 
 class Account extends EnterpriseClient
 {
+    /**
+     * @var string
+     */
     protected $objName = 'Account';
 
     /**

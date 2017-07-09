@@ -19,3 +19,28 @@ You can install the package via composer:
 composer require laravel-salesforce/helper: "dev-master"
 ```
 
+## .env Configs
+
+Set the following variables in .env
+``` bash
+SALESFORCE_CLIENT_ID=<CLIENT_ID>
+SALESFORCE_CLIENT_SECRET=<SECRET>
+SALESFORCE_USERNAME=<USERNAME>
+SALESFORCE_PASSWORD=<PASSWORD>
+SALESFORCE_URL=https://eu6.salesforce.com
+SALESFORCE_LEAD_RT=<LEAD_RECORD_TYPE>
+SALESFORCE_ACCOUNT_RT=<ACCOUNT_RECORD_TYPE>
+SALESFORCE_OPPURTUNITY_RT=<OPPURTUNITY_RECORD_TYPE>
+SALESFORCE_TASK_RT=<TASK_RECORD_TYPE>
+SALESFORCE_BRAND=<BRAND>
+SALESFORCE_BCC_EMAIL=<BBC_EMAIL>
+```
+
+Add the following code in Events/EventsServiceProvider $listen array
+``` php
+SalesforceLog::class => [
+    StoreSalesforceLog::class,
+]
+```
+
+

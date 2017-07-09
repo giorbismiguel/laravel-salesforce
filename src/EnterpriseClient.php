@@ -2,9 +2,9 @@
 
 namespace SalesforceHelper;
 
-use SalesforceHelper\Exceptions\SalesforceException;
-
 use GuzzleHttp\Client;
+use SalesforceHelper\Events\SalesforceLog;
+use SalesforceHelper\Exceptions\SalesforceException;
 
 class EnterpriseClient
 {
@@ -87,11 +87,11 @@ class EnterpriseClient
      */
     public function __construct()
     {
-        $this->leadRecord = config('salesforce.leadrecordtypeid');
-        $this->accountRecord = config('salesforce.accountrecordtypeid');
-        $this->opportunityRecord = config('salesforce.oppurtunityrecordtypeid');
-        $this->taskRecord = config('salesforce.taskrecordtypeid');
-        $this->brandName = config('salesforce.brand');
+        $this->leadRecord = config('sf.leadrecordtypeid');
+        $this->accountRecord = config('sf.accountrecordtypeid');
+        $this->opportunityRecord = config('sf.oppurtunityrecordtypeid');
+        $this->taskRecord = config('sf.taskrecordtypeid');
+        $this->brandName = config('sf.brand');
 
         $this->client = new Client([
             'headers' => [
@@ -125,6 +125,17 @@ class EnterpriseClient
             return false;
         }
 
+        if ($logRequest) {
+            event(new SalesforceLog(
+                [
+                    'options' => $options,
+                    'url'     => $url,
+                    'class'   => get_class($this),
+                    'type'    => 'REQUEST',
+                ]
+            ));
+        }
+
         $defaultOptions = [
             'headers' => [
                 'Authorization' => 'Bearer ' . $this->accessToken,
@@ -136,6 +147,17 @@ class EnterpriseClient
         $requestOptions = array_merge($defaultOptions, $options);
 
         $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
+
+        if ($logRequest) {
+            event(new SalesforceLog(
+                [
+                    'options' => $response ? \GuzzleHttp\json_decode($response) : '',
+                    'url'     => $url,
+                    'class'   => get_class($this),
+                    'type'    => 'RESPONSE',
+                ]
+            ));
+        }
 
         if (!$response) {
             return null;
@@ -151,10 +173,10 @@ class EnterpriseClient
     {
         $body = [
             'grant_type'    => 'password',
-            'client_id'     => config('salesforce.client_id'),
-            'client_secret' => config('salesforce.client_secret'),
-            'username'      => config('salesforce.username'),
-            'password'      => config('salesforce.password'),
+            'client_id'     => config('sf.client_id'),
+            'client_secret' => config('sf.client_secret'),
+            'username'      => config('sf.username'),
+            'password'      => config('sf.password'),
         ];
 
 
