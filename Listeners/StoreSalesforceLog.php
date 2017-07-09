@@ -1,8 +1,6 @@
 <?php
 
-namespace SalesforceHelper;
-
-use SalesforceHelper\Events\SalesforceLog;
+namespace App\Listeners;
 
 class StoreSalesforceLog
 {
@@ -12,7 +10,7 @@ class StoreSalesforceLog
      * @param SalesforceLog $event
      * @return void
      */
-    public function handle(SalesforceLog $event)
+    public function handle($event)
     {
         //todo log Salesforce activity
 //        activity()

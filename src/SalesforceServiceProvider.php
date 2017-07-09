@@ -23,7 +23,7 @@ class SalesforceServiceProvider extends ServiceProvider
         ]);
 
         $this->publishes([
-            __DIR__.'/../Listeners/StoreSalesforceLog.php.php' => app_path('Listeners/StoreSalesforceLog.php'),
+            __DIR__.'/../Listeners/StoreSalesforceLog.php' => app_path('Listeners/StoreSalesforceLog.php'),
         ]);
     }
 }

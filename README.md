@@ -36,17 +36,33 @@ SALESFORCE_BRAND=<BRAND>
 SALESFORCE_BCC_EMAIL=<BBC_EMAIL>
 ```
 
+## Service provider
+Second you must install the service provider:
+
+``` php
+// config/app.php
+'providers' => [
+    ...
+    SalesforceHelper\SalesforceServiceProvider::class,
+],
+```
+
+## Publish package files
 Next publish the config and migration with:
 
 ``` bash
 php artisan vendor:publish --provider="SalesforceHelper\SalesforceServiceProvider"
 ```
 
+##Register log event
 Add the following code in Events/EventsServiceProvider $listen array
 ``` php
 SalesforceLog::class => [
     StoreSalesforceLog::class,
 ]
 ```
+
+If project namespace is not App make sure to replace the namespace in 
+the copied Event and Listener files
 
 
