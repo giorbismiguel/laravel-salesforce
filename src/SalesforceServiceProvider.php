@@ -1,6 +1,6 @@
 S<?php
 
-namespace NotificationChannels\WebPush;
+namespace SalesforceHelper;
 
 use Illuminate\Support\ServiceProvider;
 
