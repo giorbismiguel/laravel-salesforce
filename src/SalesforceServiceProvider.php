@@ -4,7 +4,7 @@ namespace NotificationChannels\WebPush;
 
 use Illuminate\Support\ServiceProvider;
 
-class WebPushServiceProvider extends ServiceProvider
+class SalesforceServiceProvider extends ServiceProvider
 {
 
     /**

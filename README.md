@@ -16,7 +16,7 @@ This package makes it easy to communicate with Salesfoce.
 You can install the package via composer:
 
 ``` bash
-composer require laravel-salesforce/helper: "dev-master"
+composer require surge-financial/salesforce-laravel:"dev-master"
 ```
 
 ## .env Configs
@@ -34,6 +34,12 @@ SALESFORCE_OPPURTUNITY_RT=<OPPURTUNITY_RECORD_TYPE>
 SALESFORCE_TASK_RT=<TASK_RECORD_TYPE>
 SALESFORCE_BRAND=<BRAND>
 SALESFORCE_BCC_EMAIL=<BBC_EMAIL>
+```
+
+Next publish the config and migration with:
+
+``` bash
+php artisan vendor:publish --provider="SalesforceHelper\SalesforceServiceProvider"
 ```
 
 Add the following code in Events/EventsServiceProvider $listen array
