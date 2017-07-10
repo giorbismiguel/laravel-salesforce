@@ -7,9 +7,10 @@ class Opportunity extends EnterpriseClient
     protected $objName = 'Opportunity';
 
     /**
-     * Insert new account
+     * Insert new account.
      *
      * @param $params
+     *
      * @return bool
      */
     public function insert($params)

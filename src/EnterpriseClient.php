@@ -2,9 +2,9 @@
 
 namespace LaravelSalesforce;
 
+use Event;
 use GuzzleHttp\Client;
 use LaravelSalesforce\Exceptions\SalesforceException;
-use Event;
 
 class EnterpriseClient
 {
@@ -113,6 +113,7 @@ class EnterpriseClient
      * @param string $url
      * @param array  $options
      * @param bool   $logRequest
+     *
      * @return mixed
      */
     private function sendRequest(string $method, string $url, array $options = [], $logRequest = true)
@@ -138,7 +139,7 @@ class EnterpriseClient
 
         $defaultOptions = [
             'headers' => [
-                'Authorization' => 'Bearer ' . $this->accessToken,
+                'Authorization' => 'Bearer '.$this->accessToken,
                 'X-PrettyPrint' => '1',
                 'Accept'        => 'application/json',
             ],
@@ -146,7 +147,7 @@ class EnterpriseClient
 
         $requestOptions = array_merge($defaultOptions, $options);
 
-        $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
+        $response = $this->client->request($method, $this->url.$url, $requestOptions)->getBody()->getContents();
 
         if ($logRequest) {
             Event::fire(new SalesforceLog(
@@ -160,14 +161,14 @@ class EnterpriseClient
         }
 
         if (!$response) {
-            return null;
+            return;
         }
 
         return \GuzzleHttp\json_decode($response);
     }
 
     /**
-     * Login
+     * Login.
      */
     public function login()
     {
@@ -179,11 +180,9 @@ class EnterpriseClient
             'password'      => config('sf.password'),
         ];
 
-
         $response = $this->client->post('https://login.salesforce.com/services/oauth2/token', [
             'form_params' => $body,
         ])->getBody()->getContents();
-
 
         $responseObject = \GuzzleHttp\json_decode($response);
 
@@ -192,26 +191,26 @@ class EnterpriseClient
         $this->signature = $responseObject->signature;
         $this->accessToken = $responseObject->access_token;
         $this->instanceUrl = $responseObject->instance_url;
-        $this->url = $responseObject->instance_url . $this->version['url'];
+        $this->url = $responseObject->instance_url.$this->version['url'];
     }
 
     /**
-     * Get version
+     * Get version.
      *
      * @return mixed
      */
     public function getVersion()
     {
-        return $this->sendRequest('GET', $this->instanceUrl . '/services/data');
+        return $this->sendRequest('GET', $this->instanceUrl.'/services/data');
     }
 
     public function listOrganisationLimits()
     {
-        return $this->sendRequest('GET', $this->instanceUrl . $this->version['url'] . '/limits');
+        return $this->sendRequest('GET', $this->instanceUrl.$this->version['url'].'/limits');
     }
 
     /**
-     * List
+     * List.
      *
      * @return mixed
      */
@@ -221,7 +220,7 @@ class EnterpriseClient
     }
 
     /**
-     * List
+     * List.
      *
      * @return mixed
      */
@@ -231,45 +230,49 @@ class EnterpriseClient
     }
 
     /**
-     * Describe
+     * Describe.
      *
      * @param $objectName
+     *
      * @return mixed
      */
     public function describeObject($objectName)
     {
-        return $this->sendRequest('GET', '/sobjects/' . $objectName . '/describe', [], false);
+        return $this->sendRequest('GET', '/sobjects/'.$objectName.'/describe', [], false);
     }
 
     /**
-     * Describe
+     * Describe.
      *
      * @param $objectName
+     *
      * @return mixed
      */
     public function describeBasicObject($objectName)
     {
-        return $this->sendRequest('GET', '/sobjects/' . $objectName);
+        return $this->sendRequest('GET', '/sobjects/'.$objectName);
     }
 
     /**
-     * Run Salesforce query
+     * Run Salesforce query.
      *
      * @param $query
+     *
      * @return mixed
      */
     public function query($query)
     {
-        return $this->sendRequest('GET', '/query/?q=' . $query);
+        return $this->sendRequest('GET', '/query/?q='.$query);
     }
 
     /**
-     * Get record
+     * Get record.
      *
-     * @param  String $type
-     * @param  String $id
-     * @param  array  $fields
-     * @return Bool|mixed
+     * @param string $type
+     * @param string $id
+     * @param array  $fields
+     *
+     * @return bool|mixed
      */
     public function getRecord($type, $id, array $fields = [])
     {
@@ -287,10 +290,11 @@ class EnterpriseClient
     }
 
     /**
-     * Get record
+     * Get record.
      *
-     * @param             $id
-     * @param  array      $fields
+     * @param       $id
+     * @param array $fields
+     *
      * @return bool|mixed
      */
     public function get($id, array $fields = [])
@@ -299,12 +303,14 @@ class EnterpriseClient
     }
 
     /**
-     * Create record
+     * Create record.
      *
-     * @param        $type
-     * @param  array $data
-     * @return bool|mixed
+     * @param       $type
+     * @param array $data
+     *
      * @throws SalesforceException
+     *
+     * @return bool|mixed
      */
     public function createRecord($type, array $data)
     {
@@ -324,13 +330,15 @@ class EnterpriseClient
     }
 
     /**
-     * Update record
+     * Update record.
      *
      * @param       $type
      * @param       $id
      * @param array $data
-     * @return bool|mixed
+     *
      * @throws SalesforceException
+     *
+     * @return bool|mixed
      */
     public function updateRecord($type, $id, array $data)
     {
@@ -358,12 +366,14 @@ class EnterpriseClient
     }
 
     /**
-     * Delete
+     * Delete.
      *
      * @param $type
      * @param $id
-     * @return bool|mixed
+     *
      * @throws SalesforceException
+     *
+     * @return bool|mixed
      */
     public function deleteRecord($type, $id)
     {
@@ -381,10 +391,11 @@ class EnterpriseClient
     }
 
     /**
-     * Update
+     * Update.
      *
      * @param $id
      * @param $params
+     *
      * @return bool|mixed
      */
     public function update($id, array $params)
@@ -393,9 +404,10 @@ class EnterpriseClient
     }
 
     /**
-     * Insert new account
+     * Insert new account.
      *
      * @param $params
+     *
      * @return bool
      */
     public function insert($params)
@@ -404,9 +416,10 @@ class EnterpriseClient
     }
 
     /**
-     * Delete
+     * Delete.
      *
      * @param $params
+     *
      * @return bool
      */
     public function delete($id)
@@ -415,16 +428,17 @@ class EnterpriseClient
     }
 
     /**
-     * Run report
+     * Run report.
      *
      * @param $params
+     *
      * @return mixed
      */
     public function runReport($params)
     {
         return $this->sendRequest(
             'GET',
-            '/analytics/reports/' . $params['id'],
+            '/analytics/reports/'.$params['id'],
             ['query' => ['includeDetails' => $params['includeDetails']]],
             false
         );
