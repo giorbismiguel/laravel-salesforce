@@ -1,6 +1,6 @@
 <?php
 
-namespace SalesforceHelper\Exceptions;
+namespace LaravelSalesforce\Exceptions;
 
 use Exception;
 

@@ -1,6 +1,6 @@
 # Salesforce package for Laravel
 
-This package makes it easy to communicate with Salesfoce.
+This package makes it easy to communicate with Salesforce.
 
 ## Installation
 
@@ -34,7 +34,7 @@ Second you must install the service provider:
 // config/app.php
 'providers' => [
     ...
-    SalesforceHelper\SalesforceServiceProvider::class,
+    LaravelSalesforce\SalesforceServiceProvider::class,
 ],
 ```
 
@@ -42,7 +42,7 @@ Second you must install the service provider:
 Next publish the config with:
 
 ``` bash
-php artisan vendor:publish --provider="SalesforceHelper\SalesforceServiceProvider"
+php artisan vendor:publish --provider="LaravelSalesforce\SalesforceServiceProvider"
 ```
 
 ## Register log event
@@ -69,5 +69,3 @@ $params = [
 $response = $sfLead->insert($params);
 
 ```
-
-

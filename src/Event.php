@@ -1,6 +1,6 @@
 <?php
 
-namespace SalesforceHelper;
+namespace LaravelSalesforce;
 
 
 class Event extends EnterpriseClient

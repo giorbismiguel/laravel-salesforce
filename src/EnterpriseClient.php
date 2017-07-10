@@ -1,9 +1,9 @@
 <?php
 
-namespace SalesforceHelper;
+namespace LaravelSalesforce;
 
 use GuzzleHttp\Client;
-use SalesforceHelper\Exceptions\SalesforceException;
+use LaravelSalesforce\Exceptions\SalesforceException;
 use Event;
 
 class EnterpriseClient
@@ -78,7 +78,7 @@ class EnterpriseClient
      */
     private $version = [
         'label'   => 'Summer 16',
-        'url'     => '/services/data/v37.0',
+        'url'     => '/services/data/v38.0',
         'version' => '38.0',
     ];
 
