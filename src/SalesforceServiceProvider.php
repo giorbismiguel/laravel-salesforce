@@ -6,7 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class SalesforceServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application services.
      *
