@@ -126,7 +126,7 @@ class EnterpriseClient
         }
 
         if ($logRequest) {
-            \Event::fire(new SalesforceLog(
+            Event::fire(new SalesforceLog(
                 [
                     'options' => $options,
                     'url'     => $url,
@@ -149,7 +149,7 @@ class EnterpriseClient
         $response = $this->client->request($method, $this->url . $url, $requestOptions)->getBody()->getContents();
 
         if ($logRequest) {
-            event(new SalesforceLog(
+            Event::fire(new SalesforceLog(
                 [
                     'options' => $response ? \GuzzleHttp\json_decode($response) : '',
                     'url'     => $url,
