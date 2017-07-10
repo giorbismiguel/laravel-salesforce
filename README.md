@@ -1,3 +1,5 @@
+[![StyleCI](https://styleci.io/repos/96553078/shield?branch=master)](https://styleci.io/repos/96553078)
+
 # Salesforce package for Laravel
 
 This package makes it easy to communicate with Salesforce.
