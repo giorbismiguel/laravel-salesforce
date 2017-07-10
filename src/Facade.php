@@ -2,7 +2,7 @@
 
 namespace Surge\LaravelSalesforce;
 
-{
+class Facade {
   /**
    * {@inheritDoc}
    */
