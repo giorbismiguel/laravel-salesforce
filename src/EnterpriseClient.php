@@ -4,6 +4,7 @@ namespace SalesforceHelper;
 
 use GuzzleHttp\Client;
 use SalesforceHelper\Exceptions\SalesforceException;
+use Event;
 
 class EnterpriseClient
 {
@@ -125,7 +126,7 @@ class EnterpriseClient
         }
 
         if ($logRequest) {
-            event(new SalesforceLog(
+            \Event::fire(new SalesforceLog(
                 [
                     'options' => $options,
                     'url'     => $url,
