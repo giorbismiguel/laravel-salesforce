@@ -2,16 +2,17 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use \Surge\LaravelSalesforce\Salesforce;
+use Surge\LaravelSalesforce\Salesforce;
 
 class Lead extends Salesforce
 {
     protected $objName = 'Lead';
 
     /**
-     * Insert new lead
+     * Insert new lead.
      *
      * @param $params
+     *
      * @return bool
      */
     public function insert($params)
@@ -22,11 +23,12 @@ class Lead extends Salesforce
     }
 
     /**
-     * Check if lead already exists on SF
+     * Check if lead already exists on SF.
      *
      * @param string $phone
      * @param string $email
      * @param bool   $checkForAcc
+     *
      * @return bool|array
      */
     public function checkAlreadyExists($phone = null, $email = null, $checkForAcc = true)
@@ -45,12 +47,12 @@ class Lead extends Salesforce
         }
 
         if ($email) {
-            $query = 'SELECT Id, OwnerId  FROM ' . $this->objName . ' WHERE Email = \'' . addslashes(trim($email)) . '\'';
+            $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE Email = \''.addslashes(trim($email)).'\'';
         } else {
-            $query = 'SELECT Id, OwnerId  FROM ' . $this->objName . ' WHERE Phone = \'' . addslashes(trim($phone)) . '\'';
+            $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE Phone = \''.addslashes(trim($phone)).'\'';
         }
 
-        $query .= ' AND RecordTypeId = \'' . $this->leadRecord . '\'';
+        $query .= ' AND RecordTypeId = \''.$this->leadRecord.'\'';
 
         $response = $this->query($query);
 

@@ -2,12 +2,11 @@
 
 namespace Surge\LaravelSalesforce;
 
-use Illuminate\Support\ServiceProvider;
 use GuzzleHttp\Client;
+use Illuminate\Support\ServiceProvider;
 
 class SalesforceServiceProvider extends ServiceProvider
 {
-
     protected $defer = true;
 
     public function register()
@@ -18,7 +17,7 @@ class SalesforceServiceProvider extends ServiceProvider
             $client = new Client([
                 'headers' => [
                     'Accept' => 'application/json',
-                ]
+                ],
             ]);
 
             return new Salesforce($client);

@@ -2,7 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use \Surge\LaravelSalesforce\Salesforce;
+use Surge\LaravelSalesforce\Salesforce;
 
 class Event extends Salesforce
 {

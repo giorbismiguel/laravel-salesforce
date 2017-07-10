@@ -20,7 +20,7 @@ class ResponseReceived
      *  - options
      *  - class
      *  - url
-     *  - type
+     *  - type.
      *
      * @param array $log
      */

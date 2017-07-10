@@ -2,7 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use \Surge\LaravelSalesforce\Salesforce;
+use Surge\LaravelSalesforce\Salesforce;
 
 class Account extends Salesforce
 {
@@ -12,9 +12,10 @@ class Account extends Salesforce
     protected $objName = 'Account';
 
     /**
-     * Insert new account
+     * Insert new account.
      *
      * @param $params
+     *
      * @return bool
      */
     public function insert($params)
@@ -25,15 +26,16 @@ class Account extends Salesforce
     }
 
     /**
-     * Check if account already exists on SF
+     * Check if account already exists on SF.
      *
-     * @param  string $email
-     * @param  bool   $checkForLead
+     * @param string $email
+     * @param bool   $checkForLead
+     *
      * @return bool|array
      */
     public function checkAlreadyExists($email, $checkForLead = true)
     {
-        $query = 'SELECT Id, OwnerId  FROM ' . $this->objName . ' WHERE PersonEmail = \'' . addslashes(trim($email)) . '\' AND RecordTypeId = \'' . $this->leadRecord . '\'';
+        $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.$this->leadRecord.'\'';
 
         $response = $this->query($query);
 
@@ -44,6 +46,7 @@ class Account extends Salesforce
         //also check if exists in Lead section
         if ($checkForLead) {
             $leadObj = new Lead();
+
             return $leadObj->checkAlreadyExists(null, $email, false);
         }
 
