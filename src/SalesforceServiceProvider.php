@@ -1,11 +1,30 @@
 <?php
 
-namespace LaravelSalesforce;
+namespace Surge\LaravelSalesforce;
 
 use Illuminate\Support\ServiceProvider;
+use GuzzleHttp\Client;
 
 class SalesforceServiceProvider extends ServiceProvider
 {
+
+    protected $defer = true;
+
+    public function register()
+    {
+        $this->app->singleton('salesforce', function ($app) {
+            $auth = SalesforceAuth::login();
+
+            $client = new Client([
+                'headers' => [
+                    'Accept' => 'application/json',
+                ]
+            ]);
+
+            return new Salesforce($client);
+        });
+    }
+
     /**
      * Bootstrap the application services.
      *
@@ -16,5 +35,10 @@ class SalesforceServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/sf.php' => config_path('sf.php'),
         ], 'config');
+    }
+
+    public function provides()
+    {
+        return ['salesforce', 'Surge\LaravelSalesforce\Salesforce'];
     }
 }

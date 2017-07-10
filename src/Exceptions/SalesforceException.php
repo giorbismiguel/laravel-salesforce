@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelSalesforce\Exceptions;
+namespace Surge\LaravelSalesforce\Exceptions;
 
 use Exception;
 
