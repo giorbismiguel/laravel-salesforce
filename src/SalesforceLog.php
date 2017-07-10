@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace SalesforceHelper;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Queue\SerializesModels;

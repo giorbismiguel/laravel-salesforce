@@ -3,7 +3,6 @@
 namespace SalesforceHelper;
 
 use GuzzleHttp\Client;
-use SalesforceHelper\Events\SalesforceLog;
 use SalesforceHelper\Exceptions\SalesforceException;
 
 class EnterpriseClient
