@@ -146,7 +146,7 @@ class Salesforce
     public function query($query)
     {
         return $this->sendRequest('GET', '/query', ['query' => [
-            'q' => $query
+            'q' => $query,
         ]]);
     }
 
@@ -314,7 +314,7 @@ class Salesforce
 
     public function __call($method, $args)
     {
-        if(0 === strpos($method, 'create')) {
+        if (0 === strpos($method, 'create')) {
             callCreateOnObject($method, $args);
         } elseif (0 === strpos($method, 'update')) {
             callUpdateOnObject($method, $args);
@@ -329,8 +329,8 @@ class Salesforce
     {
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
-        if(class_exists($class)) {
-            $object = (new $class)->createRecord($args[0]);
+        if (class_exists($class)) {
+            $object = (new $class())->createRecord($args[0]);
         } else {
             $this->createRecord($type, $args[0]);
         }
@@ -340,8 +340,8 @@ class Salesforce
     {
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
-        if(class_exists($class)) {
-            $object = (new $class)->updateRecord($args[0]);
+        if (class_exists($class)) {
+            $object = (new $class())->updateRecord($args[0]);
         } else {
             $this->updateRecord($type, $args[0]);
         }
@@ -351,8 +351,8 @@ class Salesforce
     {
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
-        if(class_exists($class)) {
-            $object = (new $class)->deleteRecord($args[0]);
+        if (class_exists($class)) {
+            $object = (new $class())->deleteRecord($args[0]);
         } else {
             $this->deleteRecord($type, $args[0]);
         }
@@ -362,8 +362,8 @@ class Salesforce
     {
         $type = substr($method, 3);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
-        if(class_exists($class)) {
-            $object = (new $class)->getRecord($args[0]);
+        if (class_exists($class)) {
+            $object = (new $class())->getRecord($args[0]);
         } else {
             $this->getRecord($type, $args[0]);
         }
