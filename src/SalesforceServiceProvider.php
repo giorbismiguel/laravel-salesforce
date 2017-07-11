@@ -12,15 +12,24 @@ class SalesforceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('salesforce', function ($app) {
-            $auth = SalesforceAuth::login();
+            $authClient = new Client([
+                'headers' => [
+                    'Accept' => 'application/json',
+                ]
+            ]);
+
+            $auth = new SalesforceAuth($authClient);
 
             $client = new Client([
                 'headers' => [
-                    'Accept' => 'application/json',
+                    'Accept'        => 'application/json',
+                    'Authorization' => 'Bearer '.$this->accessToken,
+                    'X-PrettyPrint' => '1',
+                    'Accept'        => 'application/json',
                 ],
             ]);
 
-            return new Salesforce($client);
+            return new Salesforce($client, $auth);
         });
     }
 

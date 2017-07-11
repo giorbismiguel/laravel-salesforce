@@ -11,6 +11,13 @@ class Account extends Salesforce
      */
     protected $objName = 'Account';
 
+    protected $recordType;
+
+    public function __construct()
+    {
+        $this->recordType = config('sf.accountrecordtypeid');
+    }
+
     /**
      * Insert new account.
      *
@@ -20,7 +27,7 @@ class Account extends Salesforce
      */
     public function insert($params)
     {
-        $params['RecordTypeId'] = $this->accountRecord;
+        $params['RecordTypeId'] = $this->recordType;
 
         return $this->createRecord($this->objName, $params);
     }
@@ -35,7 +42,7 @@ class Account extends Salesforce
      */
     public function checkAlreadyExists($email, $checkForLead = true)
     {
-        $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.$this->leadRecord.'\'';
+        $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.$this->recordType.'\'';
 
         $response = $this->query($query);
 

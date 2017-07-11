@@ -10,67 +10,17 @@ class Salesforce
     /**
      * @var mixed
      */
-    protected $leadRecord;
-
-    /**
-     * @var mixed
-     */
-    protected $accountRecord;
-
-    /**
-     * @var mixed
-     */
-    protected $opportunityRecord;
-
-    /**
-     * @var mixed
-     */
-    protected $taskRecord;
-
-    /**
-     * @var mixed
-     */
     protected $brandName;
 
     /**
      * @var string
      */
-    private $url;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @var string
-     */
-    private $accessToken;
-
-    /**
-     * @var string
-     */
-    private $instanceUrl;
-
-    /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var mixed
-     */
-    private $issuedAt;
-
-    /**
-     * @var string
-     */
-    private $signature;
-
-    /**
-     * @var string
-     */
     protected $objName;
+
+    /**
+     * @var SalesforceAuth
+     */
+    private $auth;
 
     /**
      * @var array
@@ -84,23 +34,12 @@ class Salesforce
     /**
      * Salesforce constructor.
      */
-    public function __construct($client)
+    public function __construct($client, SalesforceAuth $auth)
     {
-        $this->leadRecord = config('sf.leadrecordtypeid');
-        $this->accountRecord = config('sf.accountrecordtypeid');
-        $this->opportunityRecord = config('sf.oppurtunityrecordtypeid');
-        $this->taskRecord = config('sf.taskrecordtypeid');
         $this->brandName = config('sf.brand');
 
         $this->client = $client;
-    }
-
-    /**
-     * @return bool
-     */
-    private function isLoggedIn(): bool
-    {
-        return $this->accessToken !== null;
+        $this->auth = $auth;
     }
 
     /**
@@ -112,10 +51,6 @@ class Salesforce
      */
     private function sendRequest(string $method, string $url, array $options = [])
     {
-        if (!$this->isLoggedIn()) {
-            $this->login();
-        }
-
         Event::fire(new RequestSent([
             'options' => $options,
             'url'     => $url,
@@ -123,77 +58,42 @@ class Salesforce
             'type'    => 'REQUEST',
         ]));
 
-        $defaultOptions = [
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->accessToken,
-                'X-PrettyPrint' => '1',
-                'Accept'        => 'application/json',
-            ],
-        ];
-
-        $requestOptions = array_merge($defaultOptions, $options);
-
-        $response = $this->client->request($method, $this->url.$url, $requestOptions)->getBody()->getContents();
+        $response = json_decode($this->client->request($method, $this->url.$url, $options)->getBody());
 
         Event::fire(new ResponseReceived([
-                'options' => $response ? \GuzzleHttp\json_decode($response) : '',
-                'url'     => $url,
-                'class'   => get_class($this),
-                'type'    => 'RESPONSE',
-            ]
-        ));
+            'options' => $response,
+            'url'     => $url,
+            'class'   => get_class($this),
+            'type'    => 'RESPONSE',
+        ]));
 
         if (!$response) {
             return;
         }
 
-        return \GuzzleHttp\json_decode($response);
+        return $response;
     }
 
     /**
-     * Login.
-     */
-    public function login()
-    {
-        $body = [
-            'grant_type'    => 'password',
-            'client_id'     => config('sf.client_id'),
-            'client_secret' => config('sf.client_secret'),
-            'username'      => config('sf.username'),
-            'password'      => config('sf.password'),
-        ];
-
-        $response = $this->client->post('https://login.salesforce.com/services/oauth2/token', [
-            'form_params' => $body,
-        ])->getBody()->getContents();
-
-        $responseObject = \GuzzleHttp\json_decode($response);
-
-        $this->id = $responseObject->id;
-        $this->issuedAt = $responseObject->issued_at;
-        $this->signature = $responseObject->signature;
-        $this->accessToken = $responseObject->access_token;
-        $this->instanceUrl = $responseObject->instance_url;
-        $this->url = $responseObject->instance_url.$this->version['url'];
-    }
-
-    /**
-     * Get version.
+     * Get latest version.
      *
      * @return mixed
      */
     public function getVersion()
     {
-        return $this->sendRequest('GET', $this->instanceUrl.'/services/data');
-    }
-
-    public function listOrganisationLimits()
-    {
-        return $this->sendRequest('GET', $this->instanceUrl.$this->version['url'].'/limits');
+        return $this->sendRequest('GET', $this->auth->instanceUrl.'/services/data');
     }
 
     /**
-     * List.
+     * Get all organisation limits.
+     */
+    public function listOrganisationLimits()
+    {
+        return $this->sendRequest('GET', $this->auth->instanceUrl.$this->version['url'].'/limits');
+    }
+
+    /**
+     * List all avaailable resources.
      *
      * @return mixed
      */
@@ -203,7 +103,7 @@ class Salesforce
     }
 
     /**
-     * List.
+     * List all objects.
      *
      * @return mixed
      */
@@ -213,7 +113,7 @@ class Salesforce
     }
 
     /**
-     * Describe.
+     * Describe an object.
      *
      * @param $objectName
      *
@@ -225,7 +125,7 @@ class Salesforce
     }
 
     /**
-     * Describe.
+     * Describe basic object.
      *
      * @param $objectName
      *
@@ -245,7 +145,9 @@ class Salesforce
      */
     public function query($query)
     {
-        return $this->sendRequest('GET', '/query/?q='.$query);
+        return $this->sendRequest('GET', '/query', ['query' => [
+            'q' => $query
+        ]]);
     }
 
     /**
@@ -408,6 +310,63 @@ class Salesforce
     public function delete($id)
     {
         return $this->deleteRecord($this->objName, $id);
+    }
+
+    public function __call($method, $args)
+    {
+        if(0 === strpos($method, 'create')) {
+            callCreateOnObject($method, $args);
+        } elseif (0 === strpos($method, 'update')) {
+            callUpdateOnObject($method, $args);
+        } elseif (0 === strpos($method, 'delete')) {
+            callDeleteOnObject($method, $args);
+        } elseif (0 === strpos($method, 'get')) {
+            callGetOnObject($method, $args);
+        }
+    }
+
+    private function callCreateOnObject($method, $args)
+    {
+        $type = substr($method, 6);
+        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        if(class_exists($class)) {
+            $object = {new $class}->createRecord($args[0]);
+        } else {
+            $this->createRecord($type, $args[0]);
+        }
+    }
+
+    private function callUpdateOnObject($method, $args)
+    {
+        $type = substr($method, 6);
+        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        if(class_exists($class)) {
+            $object = {new $class}->updateRecord($args[0]);
+        } else {
+            $this->updateRecord($type, $args[0]);
+        }
+    }
+
+    private function callDeleteOnObject($method, $args)
+    {
+        $type = substr($method, 6);
+        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        if(class_exists($class)) {
+            $object = {new $class}->deleteRecord($args[0]);
+        } else {
+            $this->deleteRecord($type, $args[0]);
+        }
+    }
+
+    private function callGetOnObject($method, $args)
+    {
+        $type = substr($method, 3);
+        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        if(class_exists($class)) {
+            $object = {new $class}->getRecord($args[0]);
+        } else {
+            $this->getRecord($type, $args[0]);
+        }
     }
 
     /**

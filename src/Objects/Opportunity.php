@@ -8,6 +8,11 @@ class Opportunity extends Salesforce
 {
     protected $objName = 'Opportunity';
 
+    public function __construct()
+    {
+        $this->recordType = config('sf.oppurtunityrecordtypeid');
+    }
+
     /**
      * Insert new account.
      *
@@ -17,8 +22,10 @@ class Opportunity extends Salesforce
      */
     public function insert($params)
     {
-        $params['RecordTypeId'] = $this->opportunityRecord;
+        $params['RecordTypeId'] = $this->recordType;
         $params['Divisions__c'] = $this->brandName;
+
+
 
         return $this->createRecord($this->objName, $params);
     }

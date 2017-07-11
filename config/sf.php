@@ -11,6 +11,5 @@ return [
     'leadrecordtypeid'        => env('SALESFORCE_LEAD_RT'),
     'accountrecordtypeid'     => env('SALESFORCE_ACCOUNT_RT'),
     'oppurtunityrecordtypeid' => env('SALESFORCE_OPPURTUNITY_RT'),
-    'taskrecordtypeid'        => env('SALESFORCE_TASK_RT'),
     'brand'                   => env('SALESFORCE_BRAND'),
 ];

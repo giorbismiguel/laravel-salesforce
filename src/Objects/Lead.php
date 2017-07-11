@@ -8,6 +8,11 @@ class Lead extends Salesforce
 {
     protected $objName = 'Lead';
 
+    public function __construct()
+    {
+        $this->recordType = config('sf.leadrecordtypeid');
+    }
+
     /**
      * Insert new lead.
      *
@@ -17,7 +22,7 @@ class Lead extends Salesforce
      */
     public function insert($params)
     {
-        $params['RecordTypeId'] = $this->leadRecord;
+        $params['RecordTypeId'] = $this->recordType;
 
         return $this->createRecord($this->objName, $params);
     }
@@ -52,7 +57,7 @@ class Lead extends Salesforce
             $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE Phone = \''.addslashes(trim($phone)).'\'';
         }
 
-        $query .= ' AND RecordTypeId = \''.$this->leadRecord.'\'';
+        $query .= ' AND RecordTypeId = \''.$this->recordType.'\'';
 
         $response = $this->query($query);
 
