@@ -328,7 +328,7 @@ class Salesforce
     private function callCreateOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
             $object = {new $class}->createRecord($args[0]);
         } else {
@@ -339,7 +339,7 @@ class Salesforce
     private function callUpdateOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
             $object = {new $class}->updateRecord($args[0]);
         } else {
@@ -350,7 +350,7 @@ class Salesforce
     private function callDeleteOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
             $object = {new $class}->deleteRecord($args[0]);
         } else {
@@ -361,7 +361,7 @@ class Salesforce
     private function callGetOnObject($method, $args)
     {
         $type = substr($method, 3);
-        $class = '\Surge\LaravelSalesforce\Objects\\'.$type);
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
             $object = {new $class}->getRecord($args[0]);
         } else {
