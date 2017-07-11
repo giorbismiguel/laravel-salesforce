@@ -15,7 +15,7 @@ class SalesforceServiceProvider extends ServiceProvider
             $authClient = new Client([
                 'headers' => [
                     'Accept' => 'application/json',
-                ]
+                ],
             ]);
 
             $auth = new SalesforceAuth($authClient);
