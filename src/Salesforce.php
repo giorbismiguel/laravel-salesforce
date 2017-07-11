@@ -330,7 +330,7 @@ class Salesforce
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
-            $object = {new $class}->createRecord($args[0]);
+            $object = (new $class)->createRecord($args[0]);
         } else {
             $this->createRecord($type, $args[0]);
         }
@@ -341,7 +341,7 @@ class Salesforce
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
-            $object = {new $class}->updateRecord($args[0]);
+            $object = (new $class)->updateRecord($args[0]);
         } else {
             $this->updateRecord($type, $args[0]);
         }
@@ -352,7 +352,7 @@ class Salesforce
         $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
-            $object = {new $class}->deleteRecord($args[0]);
+            $object = (new $class)->deleteRecord($args[0]);
         } else {
             $this->deleteRecord($type, $args[0]);
         }
@@ -363,7 +363,7 @@ class Salesforce
         $type = substr($method, 3);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
         if(class_exists($class)) {
-            $object = {new $class}->getRecord($args[0]);
+            $object = (new $class)->getRecord($args[0]);
         } else {
             $this->getRecord($type, $args[0]);
         }
