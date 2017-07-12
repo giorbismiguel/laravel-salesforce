@@ -1,5 +1,7 @@
 <?php
 
+namespace Surge\LaravelSalesforce;
+
 class SalesforceAuth
 {
     /**
