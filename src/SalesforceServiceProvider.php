@@ -23,7 +23,7 @@ class SalesforceServiceProvider extends ServiceProvider
             $client = new Client([
                 'headers' => [
                     'Accept'        => 'application/json',
-                    'Authorization' => 'Bearer '.$this->accessToken,
+                    'Authorization' => 'Bearer '.$auth->accessToken,
                     'X-PrettyPrint' => '1',
                     'Accept'        => 'application/json',
                 ],
