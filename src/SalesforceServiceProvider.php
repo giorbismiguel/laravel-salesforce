@@ -7,11 +7,9 @@ use Illuminate\Support\ServiceProvider;
 
 class SalesforceServiceProvider extends ServiceProvider
 {
-    protected $defer = true;
-
     public function register()
     {
-        $this->app->singleton('salesforce', function ($app) {
+        $this->app->singleton('salesforce', function () {
             $authClient = new Client([
                 'headers' => [
                     'Accept' => 'application/json',
@@ -25,7 +23,6 @@ class SalesforceServiceProvider extends ServiceProvider
                     'Accept'        => 'application/json',
                     'Authorization' => 'Bearer '.$auth->accessToken,
                     'X-PrettyPrint' => '1',
-                    'Accept'        => 'application/json',
                 ],
             ]);
 
@@ -41,12 +38,7 @@ class SalesforceServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/sf.php' => config_path('sf.php'),
+            __DIR__.'/../config/sf.php' => config_path('laravel-salesforce.php'),
         ], 'config');
-    }
-
-    public function provides()
-    {
-        return ['salesforce', 'Surge\LaravelSalesforce\Salesforce'];
     }
 }

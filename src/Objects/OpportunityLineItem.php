@@ -2,9 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Surge\LaravelSalesforce\Salesforce;
-
-class OpportunityLineItem extends Salesforce
+class OpportunityLineItem extends AbstractObject
 {
     protected $objName = 'OpportunityLineItem';
 

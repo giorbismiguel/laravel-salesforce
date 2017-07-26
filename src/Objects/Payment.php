@@ -2,9 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Surge\LaravelSalesforce\Salesforce;
-
-class Payment extends Salesforce
+class Payment extends AbstractObject
 {
     /**
      * @var string

@@ -2,12 +2,11 @@
 
 namespace Surge\LaravelSalesforce\Events;
 
-use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Queue\SerializesModels;
 
 class RequestSent
 {
-    use InteractsWithSockets, SerializesModels;
+    use SerializesModels;
 
     /**
      * @var array

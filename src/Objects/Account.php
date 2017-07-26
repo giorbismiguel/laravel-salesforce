@@ -2,9 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Surge\LaravelSalesforce\Salesforce;
-
-class Account extends Salesforce
+class Account extends AbstractObject
 {
     /**
      * @var string

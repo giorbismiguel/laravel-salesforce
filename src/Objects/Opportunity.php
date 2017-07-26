@@ -2,16 +2,9 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Surge\LaravelSalesforce\Salesforce;
-
-class Opportunity extends Salesforce
+class Opportunity extends AbstractObject
 {
     protected $objName = 'Opportunity';
-
-    public function __construct()
-    {
-        $this->recordType = config('sf.oppurtunityrecordtypeid');
-    }
 
     /**
      * Insert new account.
@@ -20,9 +13,9 @@ class Opportunity extends Salesforce
      *
      * @return bool
      */
-    public function insert($params)
+    public function create($params)
     {
-        $params['RecordTypeId'] = $this->recordType;
+        $params['RecordTypeId'] = config('sf.oppurtunityrecordtypeid');
         $params['Divisions__c'] = $this->brandName;
 
         return $this->createRecord($this->objName, $params);

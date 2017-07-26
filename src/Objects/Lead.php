@@ -2,9 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Surge\LaravelSalesforce\Salesforce;
-
-class Lead extends Salesforce
+class Lead extends AbstractObject
 {
     protected $objName = 'Lead';
 
