@@ -100,7 +100,7 @@ class Salesforce
             return (new $class($this))->delete($args[0]);
         }
 
-        return (new BaseObject($this, $type))->delete($type, $args[0]);
+        return (new BaseObject($this, $type))->delete($args[0]);
     }
 
     private function callGetOnObject($method, $args)

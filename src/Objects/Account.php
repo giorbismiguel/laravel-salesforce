@@ -8,14 +8,12 @@ class Account extends AbstractObject
      * Insert new account.
      *
      * @param $params
-     *
-     * @return bool
      */
     public function insert($params)
     {
         $params['RecordTypeId'] = config('laravel-salesforce.record_type.account');
 
-        return $this->createRecord($this->getType(), $params);
+        return parent::create($params);
     }
 
     /**
