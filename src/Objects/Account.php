@@ -5,20 +5,6 @@ namespace Surge\LaravelSalesforce\Objects;
 class Account extends AbstractObject
 {
     /**
-     * @var string
-     */
-    protected $objName = 'Account';
-
-    protected $recordType;
-
-    public function __construct($salesforce)
-    {
-        $this->recordType = config('laravel-salesforce.accountrecordtypeid');
-
-        parent::__construct($salesforce);
-    }
-
-    /**
      * Insert new account.
      *
      * @param $params
@@ -27,34 +13,26 @@ class Account extends AbstractObject
      */
     public function insert($params)
     {
-        $params['RecordTypeId'] = $this->recordType;
+        $params['RecordTypeId'] = config('laravel-salesforce.record_type.account');
 
-        return $this->createRecord($this->objName, $params);
+        return $this->createRecord($this->getType(), $params);
     }
 
     /**
      * Check if account already exists on SF.
      *
      * @param string $email
-     * @param bool   $checkForLead
      *
      * @return bool|array
      */
-    public function checkAlreadyExists($email, $checkForLead = true)
+    public function checkAlreadyExists($email)
     {
-        $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.$this->recordType.'\'';
+        $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.config('laravel-salesforce.record_type.account').'\'';
 
         $response = $this->query($query);
 
         if ($response && $response->totalSize > 0) {
             return array_shift($response->records);
-        }
-
-        //also check if exists in Lead section
-        if ($checkForLead) {
-            $leadObj = new Lead();
-
-            return $leadObj->checkAlreadyExists(null, $email, false);
         }
 
         return false;

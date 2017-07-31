@@ -4,14 +4,12 @@ namespace Surge\LaravelSalesforce\Objects;
 
 class OpportunityLineItem extends AbstractObject
 {
-    protected $objName = 'OpportunityLineItem';
-
     /**
      * @param $opportunityId
      */
     public function getProductByOpportunityId($opportunityId)
     {
-        $query = 'Select Id, Name, Series__c, TotalPrice, Years__c, ProductCode, Quantity, PricebookEntryId From '.$this->objName.' Where OpportunityId = \''.$opportunityId.'\' And IsDeleted = false';
+        $query = 'Select Id, Name, Series__c, TotalPrice, Years__c, ProductCode, Quantity, PricebookEntryId From '.$this->getType().' Where OpportunityId = \''.$opportunityId.'\' And IsDeleted = false';
 
         $response = $this->query($query);
 

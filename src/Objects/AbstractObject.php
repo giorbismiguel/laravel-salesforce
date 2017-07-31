@@ -2,8 +2,6 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
-use Event;
-use GuzzleHttp\ClientInterface;
 use Surge\LaravelSalesforce\Events\RequestSent;
 use Surge\LaravelSalesforce\Events\ResponseReceived;
 use Surge\LaravelSalesforce\Exceptions\SalesforceException;
@@ -11,8 +9,6 @@ use Surge\LaravelSalesforce\Salesforce;
 
 abstract class AbstractObject implements ObjectInterface
 {
-    protected $recordType;
-
     protected $salesforce;
 
     public function __construct(Salesforce $salesforce)
@@ -24,22 +20,24 @@ abstract class AbstractObject implements ObjectInterface
      * @param string $method
      * @param string $url
      * @param array  $options
+     *
+     * @return object
      */
     protected function sendRequest(string $method, string $url, array $options = [])
     {
-        Event::fire(new RequestSent([
-            'options' => $options,
+        event(new RequestSent([
+            'data' => $options,
             'url'     => $url,
             'class'   => get_class($this),
             'type'    => 'REQUEST',
         ]));
 
         $response = json_decode(
-            $this->salesforce->client->request($method, $this->salesforce->baseUrl.$url, $options)
+            $this->salesforce->client->request($method, $this->salesforce->baseUrl . $url, $options)
                 ->getBody());
 
-        Event::fire(new ResponseReceived([
-            'options' => $response,
+        event(new ResponseReceived([
+            'data' => $response,
             'url'     => $url,
             'class'   => get_class($this),
             'type'    => 'RESPONSE',
@@ -64,7 +62,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function getVersion()
     {
-        return $this->sendRequest('GET', $this->salesforce->instanceUrl.'/services/data');
+        return $this->sendRequest('GET', $this->salesforce->instanceUrl . '/services/data');
     }
 
     /**
@@ -72,7 +70,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function listOrganisationLimits()
     {
-        return $this->sendRequest('GET', $this->salesforce->instanceUrl.$this->version['url'].'/limits');
+        return $this->sendRequest('GET', $this->salesforce->instanceUrl . $this->version['url'] . '/limits');
     }
 
     /**
@@ -104,7 +102,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function describeObject($objectName)
     {
-        return $this->sendRequest('GET', '/sobjects/'.$objectName.'/describe');
+        return $this->sendRequest('GET', '/sobjects/' . $objectName . '/describe');
     }
 
     /**
@@ -116,7 +114,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function describeBasicObject($objectName)
     {
-        return $this->sendRequest('GET', '/sobjects/'.$objectName);
+        return $this->sendRequest('GET', '/sobjects/' . $objectName);
     }
 
     /**
@@ -145,9 +143,11 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function query($query)
     {
-        return $this->sendRequest('GET', '/query', ['query' => [
-            'q' => $query,
-        ]]);
+        return $this->sendRequest('GET', '/query', [
+            'query' => [
+                'q' => $query,
+            ],
+        ]);
     }
 
     /**
@@ -156,48 +156,26 @@ abstract class AbstractObject implements ObjectInterface
      * @param string $id
      *
      * @param array  $fields
-     * @return bool|mixed
      */
     public function get(string $id, array $fields = [])
     {
-        if (!$id) {
-            return false;
-        }
-
-        $response = $this->sendRequest('GET', "/sobjects/" . $this->getType() . "/$id", ['query' => $fields]);
-
-        if (!$response) {
-            return false;
-        }
-
-        return $response;
+        return $this->sendRequest('GET', "/sobjects/" . $this->getType() . "/$id", ['query' => $fields]);
     }
 
     /**
      * Update.
      *
      * @param string $id
-     * @param $params
-     * @return bool|mixed
+     * @param        $params
      * @throws SalesforceException
      */
     public function update(string $id, array $params)
     {
-        if (!$id) {
-            return false;
-        }
-
-        $response = $this->sendRequest(
-            'PATCH',
-            "/sobjects/$this->recordType/$id",
+        $response = $this->sendRequest('PATCH', "/sobjects/" . $this->getType() . "/$id",
             [
                 'json' => $params,
             ]
         );
-
-        if (!$response) {
-            return false;
-        }
 
         if ($response->success !== true) {
             throw new SalesforceException($response->errors);
@@ -211,7 +189,6 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @param $params
      *
-     * @return bool
      * @throws SalesforceException
      */
     public function create(array $params)
@@ -219,10 +196,6 @@ abstract class AbstractObject implements ObjectInterface
         $response = $this->sendRequest('POST', "/sobject/" . $this->getType(), [
             'json' => $params,
         ]);
-
-        if (!$response) {
-            return false;
-        }
 
         if ($response->success !== true) {
             throw new SalesforceException($response->errors);
@@ -235,16 +208,11 @@ abstract class AbstractObject implements ObjectInterface
      * Delete a given record
      *
      * @param string $id
-     * @return bool
      * @throws SalesforceException
      */
     public function delete(string $id)
     {
-        $response = $this->sendRequest('DELETE', "/sobjects/" . $this->getType() ."/$id");
-
-        if (!$response) {
-            return false;
-        }
+        $response = $this->sendRequest('DELETE', "/sobjects/" . $this->getType() . "/$id");
 
         if ($response->success !== true) {
             throw new SalesforceException($response->errors);

@@ -2,12 +2,8 @@
 
 namespace Surge\LaravelSalesforce\Events;
 
-use Illuminate\Queue\SerializesModels;
-
 class ResponseReceived
 {
-    use SerializesModels;
-
     /**
      * @var array
      */
@@ -16,7 +12,7 @@ class ResponseReceived
     /**
      * Create a new job instance.
      * $log
-     *  - options
+     *  - data
      *  - class
      *  - url
      *  - type.

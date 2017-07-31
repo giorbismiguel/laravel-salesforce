@@ -2,7 +2,6 @@
 
 namespace Surge\LaravelSalesforce;
 
-use Event;
 use GuzzleHttp\ClientInterface;
 use Surge\LaravelSalesforce\Objects\BaseObject;
 

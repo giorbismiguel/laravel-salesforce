@@ -8,8 +8,11 @@ return [
     'password'      => env('SALESFORCE_PASSWORD'),
     'domain'        => env('SALESFORCE_URL'),
 
-    'leadrecordtypeid'        => env('SALESFORCE_LEAD_RT'),
-    'accountrecordtypeid'     => env('SALESFORCE_ACCOUNT_RT'),
-    'oppurtunityrecordtypeid' => env('SALESFORCE_OPPURTUNITY_RT'),
     'brand'                   => env('SALESFORCE_BRAND'),
+
+    'record_type' => [
+        'lead' => env('SALESFORCE_RECORD_TYPE_LEAD'),
+        'account' => env('SALESFORCE_RECORD_TYPE_ACCOUNT'),
+        'opportunity' => env('SALESFORCE_RECORD_TYPE_OPPORTUNITY')
+    ]
 ];

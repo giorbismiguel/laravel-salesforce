@@ -4,20 +4,16 @@ namespace Surge\LaravelSalesforce\Objects;
 
 class Opportunity extends AbstractObject
 {
-    protected $objName = 'Opportunity';
-
     /**
      * Insert new account.
      *
      * @param $params
-     *
-     * @return bool
      */
-    public function create($params)
+    public function create(array $params)
     {
-        $params['RecordTypeId'] = config('laravel-salesforce.oppurtunityrecordtypeid');
-        $params['Divisions__c'] = $this->brandName;
+        $params['RecordTypeId'] = config('laravel-salesforce.record_type.opportunity');
+        $params['Divisions__c'] = config('laravel-salesforce.brand');
 
-        return $this->createRecord($this->objName, $params);
+        return parent::create($params);
     }
 }

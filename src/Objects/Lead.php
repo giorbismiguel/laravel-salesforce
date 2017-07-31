@@ -4,27 +4,16 @@ namespace Surge\LaravelSalesforce\Objects;
 
 class Lead extends AbstractObject
 {
-    protected $objName = 'Lead';
-
-    public function __construct($salesforce)
-    {
-        $this->recordType = config('laravel-salesforce.leadrecordtypeid');
-
-        parent::__construct($salesforce);
-    }
-
     /**
      * Insert new lead.
      *
      * @param $params
-     *
-     * @return bool
      */
-    public function insert($params)
+    public function create(array$params)
     {
-        $params['RecordTypeId'] = $this->recordType;
+        $params['RecordTypeId'] = config('laravel-salesforce.record_type.lead');
 
-        return $this->createRecord($this->objName, $params);
+        return parent::create($params);
     }
 
     /**
@@ -32,32 +21,23 @@ class Lead extends AbstractObject
      *
      * @param string $phone
      * @param string $email
-     * @param bool   $checkForAcc
      *
      * @return bool|array
      */
-    public function checkAlreadyExists($phone = null, $email = null, $checkForAcc = true)
+    public function checkAlreadyExists($phone = null, $email = null)
     {
         //return false if not enough data provided
         if (!$email && !$phone) {
             return false;
         }
 
-        //first check if there is account:
-        if ($checkForAcc && $email) {
-            $accountObj = new Account();
-            if ($account = $accountObj->checkAlreadyExists($email, false)) {
-                return $account;
-            }
-        }
-
         if ($email) {
-            $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE Email = \''.addslashes(trim($email)).'\'';
+            $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Email = \''.addslashes(trim($email)).'\'';
         } else {
-            $query = 'SELECT Id, OwnerId  FROM '.$this->objName.' WHERE Phone = \''.addslashes(trim($phone)).'\'';
+            $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Phone = \''.addslashes(trim($phone)).'\'';
         }
 
-        $query .= ' AND RecordTypeId = \''.$this->recordType.'\'';
+        $query .= ' AND RecordTypeId = \''.config('laravel-salesforce.record_type.lead').'\'';
 
         $response = $this->query($query);
 
