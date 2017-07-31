@@ -104,16 +104,17 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Run report.
      *
-     * @param $params
-     *
+     * @param string $id
+     * @param bool   $includeDetails
      * @return mixed
+     *
      */
-    public function runReport($params)
+    public function runReport(string $id, bool $includeDetails)
     {
         return $this->sendRequest(
             'GET',
-            '/analytics/reports/' . $params['id'],
-            ['query' => ['includeDetails' => $params['includeDetails']]]
+            '/analytics/reports/' . $id,
+            ['query' => ['includeDetails' => $includeDetails]]
         );
     }
 

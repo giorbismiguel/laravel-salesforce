@@ -30,7 +30,7 @@ class Salesforce
     }
 
     /**
-     * @param  stirng $method
+     * @param  string $method
      * @param  array  $args
      * @return bool|mixed|string
      */
@@ -52,7 +52,9 @@ class Salesforce
             return $this->callGetOnObject($method, $args);
         }
 
-        return (new BaseObject(''))->{$method}($args);
+        $class = new BaseObject('');
+
+        return call_user_func([$class, $method], $args);
     }
 
     /**
