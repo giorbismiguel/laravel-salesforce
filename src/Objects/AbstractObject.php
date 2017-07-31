@@ -46,12 +46,21 @@ abstract class AbstractObject implements ObjectInterface
         return $response;
     }
 
+    protected function getType()
+    {
+        if (isset($this->type)) {
+            return $this->type;
+        }
+
+        return get_class($this);
+    }
+
     /**
      * Get latest version.
      *
      * @return mixed
      */
-    protected function getVersion()
+    public function getVersion()
     {
         return $this->sendRequest('GET', $this->salesforce->instanceUrl.'/services/data');
     }
@@ -59,7 +68,7 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Get all organisation limits.
      */
-    protected function listOrganisationLimits()
+    public function listOrganisationLimits()
     {
         return $this->sendRequest('GET', $this->salesforce->instanceUrl.$this->version['url'].'/limits');
     }
@@ -69,7 +78,7 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @return mixed
      */
-    protected function listAvailableResources()
+    public function listAvailableResources()
     {
         return $this->sendRequest('GET', '');
     }
@@ -79,7 +88,7 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @return mixed
      */
-    protected function listObjects()
+    public function listObjects()
     {
         return $this->sendRequest('GET', '/sobjects');
     }
@@ -91,7 +100,7 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @return mixed
      */
-    protected function describeObject($objectName)
+    public function describeObject($objectName)
     {
         return $this->sendRequest('GET', '/sobjects/'.$objectName.'/describe');
     }
@@ -103,7 +112,7 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @return mixed
      */
-    protected function describeBasicObject($objectName)
+    public function describeBasicObject($objectName)
     {
         return $this->sendRequest('GET', '/sobjects/'.$objectName);
     }
@@ -132,7 +141,7 @@ abstract class AbstractObject implements ObjectInterface
      *
      * @return mixed
      */
-    protected function query($query)
+    public function query($query)
     {
         return $this->sendRequest('GET', '/query', ['query' => [
             'q' => $query,
@@ -240,14 +249,5 @@ abstract class AbstractObject implements ObjectInterface
         }
 
         return $response;
-    }
-
-    protected function getType()
-    {
-        if (isset($this->type)) {
-            return $this->type;
-        }
-
-        return get_class($this);
     }
 }
