@@ -26,7 +26,7 @@ class SalesforceServiceProvider extends ServiceProvider
                 ],
             ]);
 
-            return new Salesforce($client, $auth);
+            return new Salesforce($client, $auth->url, $auth->instanceUrl);
         });
     }
 

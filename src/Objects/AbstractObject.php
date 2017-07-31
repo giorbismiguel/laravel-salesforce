@@ -3,13 +3,22 @@
 namespace Surge\LaravelSalesforce\Objects;
 
 use Event;
+use GuzzleHttp\ClientInterface;
 use Surge\LaravelSalesforce\Events\RequestSent;
 use Surge\LaravelSalesforce\Events\ResponseReceived;
 use Surge\LaravelSalesforce\Exceptions\SalesforceException;
+use Surge\LaravelSalesforce\Salesforce;
 
 abstract class AbstractObject implements ObjectInterface
 {
     protected $recordType;
+
+    protected $salesforce;
+
+    public function __construct(Salesforce $salesforce)
+    {
+        $this->salesforce = $salesforce;
+    }
 
     /**
      * @param string $method
@@ -27,7 +36,7 @@ abstract class AbstractObject implements ObjectInterface
             'type'    => 'REQUEST',
         ]));
 
-        $response = json_decode($this->client->request($method, $this->url.$url, $options)->getBody());
+        $response = json_decode($this->salesforce->client->request($method, $this->salesforce->baseUrl.$url, $options)->getBody());
 
         Event::fire(new ResponseReceived([
             'options' => $response,
@@ -46,7 +55,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     protected function getVersion()
     {
-        return $this->sendRequest('GET', $this->auth->instanceUrl.'/services/data');
+        return $this->sendRequest('GET', $this->salesforce->instanceUrl.'/services/data');
     }
 
     /**
@@ -54,7 +63,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     protected function listOrganisationLimits()
     {
-        return $this->sendRequest('GET', $this->auth->instanceUrl.$this->version['url'].'/limits');
+        return $this->sendRequest('GET', $this->salesforce->instanceUrl.$this->version['url'].'/limits');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Surge\LaravelSalesforce;
 
 use Event;
+use GuzzleHttp\ClientInterface;
 use Surge\LaravelSalesforce\Objects\BaseObject;
 
 class Salesforce
@@ -12,21 +13,24 @@ class Salesforce
      */
     protected $objName;
 
-    /**
-     * @var SalesforceAuth
-     */
-    private $auth;
+    public $baseUrl;
+
+    public $instanceUrl;
+
+    public $client;
 
     /**
      * Salesforce constructor.
      *
-     * @param                $client
-     * @param SalesforceAuth $auth
+     * @param ClientInterface $client
+     * @param string          $url
+     * @param string          $instanceUrl
      */
-    public function __construct($client, SalesforceAuth $auth)
+    public function __construct(ClientInterface $client, string $url, string $instanceUrl)
     {
         $this->client = $client;
-        $this->auth = $auth;
+        $this->baseUrl = $url;
+        $this->instanceUrl = $instanceUrl;
     }
 
     /**
@@ -52,7 +56,7 @@ class Salesforce
             return $this->callGetOnObject($method, $args);
         }
 
-        $class = new BaseObject();
+        $class = new BaseObject($this);
 
         return call_user_func_array([$class, $method], $args);
     }
@@ -70,10 +74,10 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return (new $class())->create($args[0]);
+            return (new $class($this))->create($args[0]);
         }
 
-        return (new BaseObject($type))->create($args[0]);
+        return (new BaseObject($this, $type))->create($args[0]);
     }
 
     private function callUpdateOnObject($method, $args)
@@ -82,10 +86,10 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return (new $class())->update($args[0]);
+            return (new $class($this))->update($args[0]);
         }
 
-        return (new BaseObject($type))->update($type, $args[0]);
+        return (new BaseObject($this, $type))->update($type, $args[0]);
     }
 
     private function callDeleteOnObject($method, $args)
@@ -94,10 +98,10 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return (new $class())->delete($args[0]);
+            return (new $class($this))->delete($args[0]);
         }
 
-        return (new BaseObject($type))->delete($type, $args[0]);
+        return (new BaseObject($this, $type))->delete($type, $args[0]);
     }
 
     private function callGetOnObject($method, $args)
@@ -106,9 +110,9 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return (new $class())->get($args[0]);
+            return (new $class($this))->get($args[0]);
         }
 
-        return (new BaseObject($type))->get($args[0]);
+        return (new BaseObject($this, $type))->get($args[0]);
     }
 }
