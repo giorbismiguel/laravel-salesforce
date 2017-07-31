@@ -24,10 +24,8 @@ abstract class AbstractObject implements ObjectInterface
      * @param string $method
      * @param string $url
      * @param array  $options
-     *
-     * @return string
      */
-    protected function sendRequest(string $method, string $url, array $options = []): string
+    protected function sendRequest(string $method, string $url, array $options = [])
     {
         Event::fire(new RequestSent([
             'options' => $options,
