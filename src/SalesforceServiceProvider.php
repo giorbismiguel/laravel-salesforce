@@ -38,7 +38,7 @@ class SalesforceServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../config/sf.php' => config_path('laravel-salesforce.php'),
+            __DIR__.'/../config/laravel-salesforce.php' => config_path('laravel-salesforce.php'),
         ], 'config');
     }
 }
