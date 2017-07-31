@@ -52,7 +52,7 @@ class Salesforce
             return $this->callGetOnObject($method, $args);
         }
 
-        return (new BaseObject(''))->$method();
+        return (new BaseObject(''))->{$method}();
     }
 
     /**
