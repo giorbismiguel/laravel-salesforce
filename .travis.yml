@@ -1,8 +1,8 @@
 language: php
+sudo: false
+dist: trusty
 
 php:
   - 7.0
-
-sudo: false
 
 install: composer install
