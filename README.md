@@ -1,5 +1,6 @@
 [![StyleCI](https://styleci.io/repos/96553078/shield?branch=master)](https://styleci.io/repos/96553078)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Surge-Financial/laravel-salesforce/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Surge-Financial/laravel-salesforce/?branch=master)
+[![Build Status](https://travis-ci.org/Surge-Financial/laravel-salesforce.svg?branch=master)](https://travis-ci.org/Surge-Financial/laravel-salesforce)
 # Salesforce package for Laravel
 
 This package makes it easy to communicate with Salesforce.
