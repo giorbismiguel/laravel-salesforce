@@ -54,7 +54,7 @@ class Salesforce
 
         $class = new BaseObject('');
 
-        return call_user_func([$class, $method], $args);
+        return call_user_func_array([$class, $method], $args);
     }
 
     /**
