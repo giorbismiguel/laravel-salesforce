@@ -33,9 +33,9 @@ class SalesforceAuth
      * @var array
      */
     private $version = [
-        'label'   => 'Summer 16',
-        'url'     => '/services/data/v37.0',
-        'version' => '38.0',
+        'label'   => 'Summer 17',
+        'url'     => '/services/data/v39.0',
+        'version' => '39.0',
     ];
 
 
