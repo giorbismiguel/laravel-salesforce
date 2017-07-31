@@ -29,7 +29,11 @@ class Salesforce
         $this->auth = $auth;
     }
 
-
+    /**
+     * @param  stirng $method
+     * @param  array  $args
+     * @return bool|mixed|string
+     */
     public function __call($method, $args)
     {
         if (0 === strpos($method, 'create')) {
@@ -51,10 +55,17 @@ class Salesforce
         return '';
     }
 
+    /**
+     * Create object dynamically
+     *
+     * @param $method
+     * @param $args
+     * @return bool
+     */
     private function callCreateOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
             return (new $class())->create($args[0]);
@@ -66,7 +77,7 @@ class Salesforce
     private function callUpdateOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
             return (new $class())->update($args[0]);
@@ -78,7 +89,7 @@ class Salesforce
     private function callDeleteOnObject($method, $args)
     {
         $type = substr($method, 6);
-        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
             return (new $class())->delete($args[0]);
@@ -90,7 +101,7 @@ class Salesforce
     private function callGetOnObject($method, $args)
     {
         $type = substr($method, 3);
-        $class = '\\Surge\\LaravelSalesforce\\Objects\\'.$type;
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
             return (new $class())->record($args[0]);
@@ -110,7 +121,7 @@ class Salesforce
     {
         return $this->sendRequest(
             'GET',
-            '/analytics/reports/'.$params['id'],
+            '/analytics/reports/' . $params['id'],
             ['query' => ['includeDetails' => $params['includeDetails']]],
             false
         );

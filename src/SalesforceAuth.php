@@ -29,16 +29,36 @@ class SalesforceAuth
      */
     private $authenticated = false;
 
-    public function isAuthenticated(): bool
-    {
-        return $this->authenticated;
-    }
+    /**
+     * @var array
+     */
+    private $version = [
+        'label'   => 'Summer 16',
+        'url'     => '/services/data/v37.0',
+        'version' => '38.0',
+    ];
 
+
+    /**
+     * SalesforceAuth constructor.
+     *
+     * @param $client
+     */
     public function __construct($client)
     {
         $this->client = $client;
 
         $this->login();
+    }
+
+    /**
+     * Check if authenticated
+     *
+     * @return bool
+     */
+    public function isAuthenticated(): bool
+    {
+        return $this->authenticated;
     }
 
     /**
@@ -63,7 +83,7 @@ class SalesforceAuth
         $this->id = $responseObject->id;
         $this->accessToken = $responseObject->access_token;
         $this->instanceUrl = $responseObject->instance_url;
-        $this->url = $responseObject->instance_url.$this->version['url'];
+        $this->url = $responseObject->instance_url . $this->version['url'];
 
         if ($this->accessToken !== null) {
             $this->authenticated = true;

@@ -36,38 +36,42 @@ Second you must install the service provider:
 // config/app.php
 'providers' => [
     ...
-    LaravelSalesforce\SalesforceServiceProvider::class,
+    Surge\LaravelSalesforce\SalesforceServiceProvider::class
 ],
+
+'aliases' => [
+    ...
+    'Salesforce'   => Surge\LaravelSalesforce\Facade::class,   
+]
+
 ```
 
 ## Publish package files
 Next publish the config with:
 
 ``` bash
-php artisan vendor:publish --provider="LaravelSalesforce\SalesforceServiceProvider"
+php artisan vendor:publish --provider="Surge\LaravelSalesforce\SalesforceServiceProvider"
 ```
 
 ## Register log event
 In order to log all Salesforce requests and responses - add the following code in Events/EventsServiceProvider $listen array.
 ``` php
-SalesforceLog::class => [
+
+RequestSent::class => [
     <YourListenerClass>::class,
 ]
+
+ResponseReceived::class => [
+    <YourListenerClass>::class,
+]
+
 ```
 
 ## Usage:
 
 ``` php
 
-//Lead
-$sfLead = new Lead();
-$params = [
-    'FirstName'  => 'John',
-    'LastName'   => 'Smith',
-    'Phone'      => '07846090556',
-    'OwnerId'    => '3443554353445UUA',
-    'LeadSource' => 'Callback'
-];
-$response = $sfLead->insert($params);
+//Get opportunity
+\Salesforce::getOpportunity($id);
 
 ```
