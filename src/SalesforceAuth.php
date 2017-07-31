@@ -2,6 +2,7 @@
 
 namespace Surge\LaravelSalesforce;
 
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 
 class SalesforceAuth
@@ -47,7 +48,7 @@ class SalesforceAuth
      *
      * @param $client
      */
-    public function __construct(GuzzleException $client)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
 

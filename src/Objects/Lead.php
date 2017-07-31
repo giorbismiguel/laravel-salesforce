@@ -27,11 +27,11 @@ class Lead extends AbstractObject
     public function checkAlreadyExists($phone = null, $email = null)
     {
         //return false if not enough data provided
-        if (!$email && !$phone) {
+        if ($email === null && $phone === null) {
             return false;
         }
 
-        if ($email) {
+        if ($email !== null) {
             $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Email = \''.addslashes(trim($email)).'\'';
         } else {
             $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Phone = \''.addslashes(trim($phone)).'\'';
