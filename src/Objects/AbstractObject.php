@@ -9,7 +9,7 @@ use Surge\LaravelSalesforce\Exceptions\SalesforceException;
 
 abstract class AbstractObject implements ObjectInterface
 {
-    private $recordType;
+    protected $recordType;
 
     /**
      * @param string $method
@@ -118,18 +118,18 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Get record.
      *
-     * @param       $id
-     * @param array $fields
+     * @param string $id
      *
+     * @param array  $fields
      * @return bool|mixed
      */
-    public function get($id, array $fields = [])
+    public function get(string $id, array $fields = [])
     {
         if (!$id) {
             return false;
         }
 
-        $response = $this->sendRequest('GET', "/sobjects/$type/$id", ['query' => $fields]);
+        $response = $this->sendRequest('GET', "/sobjects/" . $this->getType() . "/$id", ['query' => $fields]);
 
         if (!$response) {
             return false;
@@ -141,12 +141,12 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Update.
      *
-     * @param $id
+     * @param string $id
      * @param $params
      * @return bool|mixed
      * @throws SalesforceException
      */
-    public function update($id, array $params)
+    public function update(string $id, array $params)
     {
         if (!$id) {
             return false;
@@ -154,9 +154,9 @@ abstract class AbstractObject implements ObjectInterface
 
         $response = $this->sendRequest(
             'PATCH',
-            "/sobjects/$type/$id",
+            "/sobjects/$this->recordType/$id",
             [
-                'json' => $data,
+                'json' => $params,
             ]
         );
 
@@ -179,10 +179,10 @@ abstract class AbstractObject implements ObjectInterface
      * @return bool
      * @throws SalesforceException
      */
-    public function create($params)
+    public function create(array $params)
     {
-        $response = $this->sendRequest('POST', "/sobjects/$type", [
-            'json' => $data,
+        $response = $this->sendRequest('POST', "/sobject/" . $this->getType(), [
+            'json' => $params,
         ]);
 
         if (!$response) {
@@ -199,14 +199,13 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Delete a given record
      *
-     * @param string $type
      * @param string $id
      * @return bool
      * @throws SalesforceException
      */
-    public function delete(string $type, string $id)
+    public function delete(string $id)
     {
-        $response = $this->sendRequest('DELETE', "/sobjects/$type/$id");
+        $response = $this->sendRequest('DELETE', "/sobjects/" . $this->getType() ."/$id");
 
         if (!$response) {
             return false;
@@ -219,4 +218,12 @@ abstract class AbstractObject implements ObjectInterface
         return $response;
     }
 
+    protected function getType()
+    {
+        if (isset($this->type)) {
+            return $this->type;
+        }
+
+        return get_class($this);
+    }
 }

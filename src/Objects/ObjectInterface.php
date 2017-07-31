@@ -8,5 +8,7 @@ interface ObjectInterface
 
     public function update(string $id, array $params);
 
-    public function delete(string $type, string $id);
+    public function delete(string $id);
+
+    public function get(string $id, array $fields = []);
 }
