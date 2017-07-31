@@ -102,6 +102,22 @@ abstract class AbstractObject implements ObjectInterface
     }
 
     /**
+     * Run report.
+     *
+     * @param $params
+     *
+     * @return mixed
+     */
+    public function runReport($params)
+    {
+        return $this->sendRequest(
+            'GET',
+            '/analytics/reports/' . $params['id'],
+            ['query' => ['includeDetails' => $params['includeDetails']]]
+        );
+    }
+
+    /**
      * Run Salesforce query.
      *
      * @param $query

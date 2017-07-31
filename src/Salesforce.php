@@ -109,21 +109,4 @@ class Salesforce
 
         return (new BaseObject($type))->get($args[0]);
     }
-
-    /**
-     * Run report.
-     *
-     * @param $params
-     *
-     * @return mixed
-     */
-    public function runReport($params)
-    {
-        return $this->sendRequest(
-            'GET',
-            '/analytics/reports/' . $params['id'],
-            ['query' => ['includeDetails' => $params['includeDetails']]],
-            false
-        );
-    }
 }
