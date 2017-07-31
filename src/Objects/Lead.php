@@ -8,7 +8,7 @@ class Lead extends AbstractObject
 
     public function __construct()
     {
-        $this->recordType = config('sf.leadrecordtypeid');
+        $this->recordType = config('laravel-salesforce.leadrecordtypeid');
     }
 
     /**

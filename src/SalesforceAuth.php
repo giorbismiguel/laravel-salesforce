@@ -68,10 +68,10 @@ class SalesforceAuth
     {
         $body = [
             'grant_type'    => 'password',
-            'client_id'     => config('sf.client_id'),
-            'client_secret' => config('sf.client_secret'),
-            'username'      => config('sf.username'),
-            'password'      => config('sf.password'),
+            'client_id'     => config('laravel-salesforce.client_id'),
+            'client_secret' => config('laravel-salesforce.client_secret'),
+            'username'      => config('laravel-salesforce.username'),
+            'password'      => config('laravel-salesforce.password'),
         ];
 
         $response = $this->client->post('https://login.salesforce.com/services/oauth2/token', [

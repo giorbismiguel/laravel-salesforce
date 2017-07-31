@@ -15,7 +15,7 @@ class Opportunity extends AbstractObject
      */
     public function create($params)
     {
-        $params['RecordTypeId'] = config('sf.oppurtunityrecordtypeid');
+        $params['RecordTypeId'] = config('laravel-salesforce.oppurtunityrecordtypeid');
         $params['Divisions__c'] = $this->brandName;
 
         return $this->createRecord($this->objName, $params);
