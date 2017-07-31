@@ -6,9 +6,11 @@ class Lead extends AbstractObject
 {
     protected $objName = 'Lead';
 
-    public function __construct()
+    public function __construct($salesforce)
     {
         $this->recordType = config('laravel-salesforce.leadrecordtypeid');
+
+        parent::__construct($salesforce);
     }
 
     /**

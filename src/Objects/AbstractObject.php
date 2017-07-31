@@ -34,7 +34,9 @@ abstract class AbstractObject implements ObjectInterface
             'type'    => 'REQUEST',
         ]));
 
-        $response = json_decode($this->salesforce->client->request($method, $this->salesforce->baseUrl.$url, $options)->getBody());
+        $response = json_decode(
+            $this->salesforce->client->request($method, $this->salesforce->baseUrl.$url, $options)
+                ->getBody());
 
         Event::fire(new ResponseReceived([
             'options' => $response,
@@ -52,7 +54,7 @@ abstract class AbstractObject implements ObjectInterface
             return $this->type;
         }
 
-        return get_class($this);
+        return (new \ReflectionClass($this))->getShortName();
     }
 
     /**

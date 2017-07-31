@@ -11,9 +11,11 @@ class Account extends AbstractObject
 
     protected $recordType;
 
-    public function __construct()
+    public function __construct($salesforce)
     {
         $this->recordType = config('laravel-salesforce.accountrecordtypeid');
+
+        parent::__construct($salesforce);
     }
 
     /**
