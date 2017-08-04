@@ -89,11 +89,12 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return (new $class($this))->update($args[0]);
+            return (new $class($this))->update($args[0], $args[1]);
         }
 
         return (new BaseObject($this, $type))->update($type, $args[0]);
     }
+
 
     private function callDeleteOnObject($method, $args)
     {
