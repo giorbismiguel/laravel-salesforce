@@ -192,7 +192,7 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function create(array $params)
     {
-        $response = $this->sendRequest('POST', "/sobject/" . $this->getType(), [
+        $response = $this->sendRequest('POST', "/sobjects/" . $this->getType(), [
             'json' => $params,
         ]);
 
