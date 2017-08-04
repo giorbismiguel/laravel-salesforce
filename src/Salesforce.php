@@ -55,6 +55,10 @@ class Salesforce
             return $this->callGetOnObject($method, $args);
         }
 
+        if (0 === strpos($method, 'init')) {
+            return $this->callInitObject($method);
+        }
+
         $class = new BaseObject($this);
 
         return call_user_func_array([$class, $method], $args);
@@ -113,5 +117,17 @@ class Salesforce
         }
 
         return (new BaseObject($this, $type))->get($args[0]);
+    }
+
+    private function callInitObject($method)
+    {
+        $type = substr($method, 4);
+        $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
+
+        if (class_exists($class)) {
+            return new $class($this);
+        }
+
+        return new BaseObject($this, $type);
     }
 }

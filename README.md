@@ -72,7 +72,16 @@ ResponseReceived::class => [
 
 ``` php
 
+use Salesforce;
+
+
 //Get opportunity
-\Salesforce::getOpportunity($id);
+Salesforce::getOpportunity($id);
+
+//Create new account
+Salesforce::createAccount($params);
+
+//Get instance of object and check if account exists
+Salesforce::initLead()->checkAlreadyExists($phone, $email);
 
 ```

@@ -9,7 +9,7 @@ class Lead extends AbstractObject
      *
      * @param $params
      */
-    public function create(array$params)
+    public function create(array $params)
     {
         $params['RecordTypeId'] = config('laravel-salesforce.record_type.lead');
 
@@ -32,12 +32,12 @@ class Lead extends AbstractObject
         }
 
         if ($email !== null) {
-            $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Email = \''.addslashes(trim($email)).'\'';
+            $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE Email = \'' . addslashes(trim($email)) . '\'';
         } else {
-            $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE Phone = \''.addslashes(trim($phone)).'\'';
+            $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE Phone = \'' . addslashes(trim($phone)) . '\'';
         }
 
-        $query .= ' AND RecordTypeId = \''.config('laravel-salesforce.record_type.lead').'\'';
+        $query .= ' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
 
         $response = $this->query($query);
 

@@ -26,10 +26,10 @@ abstract class AbstractObject implements ObjectInterface
     protected function sendRequest(string $method, string $url, array $options = [])
     {
         event(new RequestSent([
-            'data' => $options,
-            'url'     => $url,
-            'class'   => get_class($this),
-            'type'    => 'REQUEST',
+            'data'  => $options,
+            'url'   => $url,
+            'class' => get_class($this),
+            'type'  => 'REQUEST',
         ]));
 
         $response = json_decode(
@@ -37,10 +37,10 @@ abstract class AbstractObject implements ObjectInterface
                 ->getBody());
 
         event(new ResponseReceived([
-            'data' => $response,
-            'url'     => $url,
-            'class'   => get_class($this),
-            'type'    => 'RESPONSE',
+            'data'  => $response,
+            'url'   => $url,
+            'class' => get_class($this),
+            'type'  => 'RESPONSE',
         ]));
 
         return $response;
@@ -118,20 +118,19 @@ abstract class AbstractObject implements ObjectInterface
     }
 
     /**
-     * Run report.
-     *
-     * @param string $id
-     * @param bool   $includeDetails
-     * @return mixed
-     *
+     * @param $opportunityId
      */
-    public function runReport(string $id, bool $includeDetails)
+    public function getAllByOpportunityId($opportunityId)
     {
-        return $this->sendRequest(
-            'GET',
-            '/analytics/reports/' . $id,
-            ['query' => ['includeDetails' => $includeDetails]]
-        );
+        $query = 'Select Id, Name, Opportunity__c, Net_amount__c, Payment_Date__c, Gross_Amount__c From ' . $this->getType() . ' Where Opportunity__c = \'' . $opportunityId . '\' And IsDeleted = false';
+
+        $response = $this->query($query);
+
+        if ($response && $response->totalSize > 0) {
+            return $response->records;
+        }
+
+        return false;
     }
 
     /**
