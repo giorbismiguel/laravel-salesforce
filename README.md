@@ -81,7 +81,7 @@ Salesforce::getOpportunity($id);
 //Create new account
 Salesforce::createAccount($params);
 
-//Get instance of object and check if account exists
-Salesforce::initLead()->checkAlreadyExists($phone, $email);
+//Check if account exists
+Salesforce::existsAccount($phone, $email);
 
 ```

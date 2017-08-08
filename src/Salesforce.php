@@ -39,24 +39,24 @@ class Salesforce
      */
     public function __call($method, $args)
     {
-        if (0 === strpos($method, 'create')) {
+        if (starts_with($method, 'create')) {
             return $this->callCreateOnObject($method, $args);
         }
 
-        if (0 === strpos($method, 'update')) {
+        if (starts_with($method, 'update')) {
             return $this->callUpdateOnObject($method, $args);
         }
 
-        if (0 === strpos($method, 'delete')) {
+        if (starts_with($method, 'delete')) {
             return $this->callDeleteOnObject($method, $args);
         }
 
-        if (0 === strpos($method, 'get')) {
+        if (starts_with($method, 'get')) {
             return $this->callGetOnObject($method, $args);
         }
 
-        if (0 === strpos($method, 'init')) {
-            return $this->callInitObject($method);
+        if (starts_with($method, 'exists')) {
+            return $this->callExistsOnObject($method, $args);
         }
 
         $class = new BaseObject($this);
@@ -95,7 +95,6 @@ class Salesforce
         return (new BaseObject($this, $type))->update($type, $args[0]);
     }
 
-
     private function callDeleteOnObject($method, $args)
     {
         $type = substr($method, 6);
@@ -120,15 +119,45 @@ class Salesforce
         return (new BaseObject($this, $type))->get($args[0]);
     }
 
-    private function callInitObject($method)
+    private function callExistsOnObject($method, $args)
     {
-        $type = substr($method, 4);
+        $type = substr($method, 3);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
-            return new $class($this);
+            return (new $class($this))->exists($args[0], $args[1]);
         }
 
-        return new BaseObject($this, $type);
+        return (new BaseObject($this, $type))->get($args[0]);
+    }
+
+    /**
+     * Run query
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function runQuery($query)
+    {
+        $response = $this->query($query);
+
+        if ($response && $response->totalSize > 0) {
+            return $response->records;
+        }
+
+        return false;
+    }
+
+    /**
+     * Run report.
+     *
+     * @param string $id
+     * @param bool   $includeDetails
+     * @return mixed
+     *
+     */
+    public function getReport(string $id, bool $includeDetails = true)
+    {
+        return $this->report($id, $includeDetails);
     }
 }

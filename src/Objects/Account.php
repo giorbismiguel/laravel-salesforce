@@ -23,9 +23,9 @@ class Account extends AbstractObject
      *
      * @return bool|array
      */
-    public function checkAlreadyExists($email)
+    public function exists($phone = null, $email = null)
     {
-        $query = 'SELECT Id, OwnerId  FROM '.$this->getType().' WHERE PersonEmail = \''.addslashes(trim($email)).'\' AND RecordTypeId = \''.config('laravel-salesforce.record_type.account').'\'';
+        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE PersonEmail = \'' . addslashes(trim($email)) . '\' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.account') . '\'';
 
         $response = $this->query($query);
 

@@ -2,6 +2,7 @@
 
 namespace Surge\LaravelSalesforce\Objects;
 
+use GuzzleHttp\Exception\ClientException;
 use Surge\LaravelSalesforce\Events\RequestSent;
 use Surge\LaravelSalesforce\Events\ResponseReceived;
 use Surge\LaravelSalesforce\Exceptions\SalesforceException;
@@ -26,21 +27,26 @@ abstract class AbstractObject implements ObjectInterface
     protected function sendRequest(string $method, string $url, array $options = [])
     {
         event(new RequestSent([
-            'data'  => $options,
-            'url'   => $url,
-            'class' => get_class($this),
-            'type'  => 'REQUEST',
+            'data' => $options,
+            'url'     => $url,
+            'class'   => get_class($this),
+            'type'    => 'REQUEST',
         ]));
 
-        $response = json_decode(
-            $this->salesforce->client->request($method, $this->salesforce->baseUrl . $url, $options)
-                ->getBody());
+        try {
+            $response = json_decode(
+                $this->salesforce->client->request($method, $this->salesforce->baseUrl . $url, $options)
+                    ->getBody());
+        } catch (ClientException $e) {
+            throw new SalesforceException($e->getMessage());
+        }
+
 
         event(new ResponseReceived([
-            'data'  => $response,
-            'url'   => $url,
-            'class' => get_class($this),
-            'type'  => 'RESPONSE',
+            'data' => $response,
+            'url'     => $url,
+            'class'   => get_class($this),
+            'type'    => 'RESPONSE',
         ]));
 
         return $response;
@@ -118,22 +124,6 @@ abstract class AbstractObject implements ObjectInterface
     }
 
     /**
-     * @param $opportunityId
-     */
-    public function getAllByOpportunityId($opportunityId)
-    {
-        $query = 'Select Id, Name, Opportunity__c, Net_amount__c, Payment_Date__c, Gross_Amount__c From ' . $this->getType() . ' Where Opportunity__c = \'' . $opportunityId . '\' And IsDeleted = false';
-
-        $response = $this->query($query);
-
-        if ($response && $response->totalSize > 0) {
-            return $response->records;
-        }
-
-        return false;
-    }
-
-    /**
      * Run Salesforce query.
      *
      * @param $query
@@ -164,23 +154,17 @@ abstract class AbstractObject implements ObjectInterface
     /**
      * Update.
      *
-     * @param string $id
+     * @param  string $id
      * @param        $params
-     * @throws SalesforceException
+     * @return void
      */
     public function update(string $id, array $params)
     {
-        $response = $this->sendRequest('PATCH', "/sobjects/" . $this->getType() . "/$id",
+        $this->sendRequest('PATCH', "/sobjects/" . $this->getType() . "/$id",
             [
                 'json' => $params,
             ]
         );
-
-        if ($response->success !== true) {
-            throw new SalesforceException($response->errors);
-        }
-
-        return $response;
     }
 
     /**
@@ -218,5 +202,14 @@ abstract class AbstractObject implements ObjectInterface
         }
 
         return $response;
+    }
+
+    public function report(string $id, bool $includeDetails = true)
+    {
+        return $this->sendRequest(
+            'GET',
+            '/analytics/reports/' . $id,
+            ['query' => ['includeDetails' => $includeDetails]]
+        );
     }
 }

@@ -24,7 +24,7 @@ class Lead extends AbstractObject
      *
      * @return bool|array
      */
-    public function checkAlreadyExists($phone = null, $email = null)
+    public function exists($phone = null, $email = null)
     {
         //return false if not enough data provided
         if ($email === null && $phone === null) {
