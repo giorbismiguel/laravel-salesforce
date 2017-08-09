@@ -121,7 +121,7 @@ class Salesforce
 
     private function callExistsOnObject($method, $args)
     {
-        $type = substr($method, 3);
+        $type = substr($method, 6);
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
