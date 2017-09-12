@@ -82,6 +82,6 @@ Salesforce::getOpportunity($id);
 Salesforce::createAccount($params);
 
 //Check if account exists
-Salesforce::existsAccount($phone, $email);
+Salesforce::existsAccount(['PersonEmail' => 'test@test.com']);
 
 ```

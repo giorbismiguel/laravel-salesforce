@@ -28,13 +28,13 @@ class Account extends AbstractObject
      */
     public function exists($params)
     {
-        if(empty($params)) {
+        if (empty($params)) {
             return false;
         }
 
         $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE RecordTypeId = \'' . config('laravel-salesforce.record_type.account') . '\'';
 
-        foreach($params as $fieldName => $fieldValue) {
+        foreach ($params as $fieldName => $fieldValue) {
             $query .= ' AND ' . $fieldName . '=\'' . addslashes(trim($fieldValue)) . '\'';
         }
 

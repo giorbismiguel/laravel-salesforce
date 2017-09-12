@@ -19,25 +19,26 @@ class Lead extends AbstractObject
     /**
      * Check if lead already exists on SF.
      *
-     * @param string $phone
-     * @param string $email
+     * $params = [
+     *   'Email' => 'test@test.com'
+     * ]
+     *
+     * @param string $params
      *
      * @return bool|array
      */
-    public function exists($phone = null, $email = null)
+    public function exists($params)
     {
         //return false if not enough data provided
-        if ($email === null && $phone === null) {
+        if (empty($params)) {
             return false;
         }
 
-        if ($email !== null) {
-            $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE Email = \'' . addslashes(trim($email)) . '\'';
-        } else {
-            $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE Phone = \'' . addslashes(trim($phone)) . '\'';
-        }
+        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
 
-        $query .= ' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
+        foreach ($params as $fieldName => $fieldValue) {
+            $query .= ' AND ' . $fieldName . '=\'' . addslashes(trim($fieldValue)) . '\'';
+        }
 
         $response = $this->query($query);
 
