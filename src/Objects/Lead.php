@@ -34,7 +34,7 @@ class Lead extends AbstractObject
             return false;
         }
 
-        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
+        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
 
         foreach ($params as $fieldName => $fieldValue) {
             $query .= ' AND ' . $fieldName . '=\'' . addslashes(trim($fieldValue)) . '\'';
