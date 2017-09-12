@@ -18,14 +18,25 @@ class Account extends AbstractObject
 
     /**
      * Check if account already exists on SF.
+     * $params = [
+     *  'PersonEmail' => 'test@test.com'
+     * ]
      *
-     * @param string $email
      *
+     * @param array $param to search
      * @return bool|array
      */
-    public function exists($phone = null, $email = null)
+    public function exists($params)
     {
-        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE PersonEmail = \'' . addslashes(trim($email)) . '\' AND RecordTypeId = \'' . config('laravel-salesforce.record_type.account') . '\'';
+        if(empty($params)) {
+            return false;
+        }
+
+        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE RecordTypeId = \'' . config('laravel-salesforce.record_type.account') . '\'';
+
+        foreach($params as $fieldName => $fieldValue) {
+            $query .= ' AND ' . $fieldName . '=\'' . addslashes(trim($fieldValue)) . '\'';
+        }
 
         $response = $this->query($query);
 
