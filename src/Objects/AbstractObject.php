@@ -27,26 +27,29 @@ abstract class AbstractObject implements ObjectInterface
     protected function sendRequest(string $method, string $url, array $options = [])
     {
         event(new RequestSent([
-            'data' => $options,
-            'url'     => $url,
-            'class'   => get_class($this),
-            'type'    => 'REQUEST',
+            'data'  => $options,
+            'url'   => $url,
+            'class' => get_class($this),
+            'type'  => 'REQUEST',
         ]));
 
-        try {
-            $response = json_decode(
-                $this->salesforce->client->request($method, $this->salesforce->baseUrl . $url, $options)
-                    ->getBody());
-        } catch (ClientException $e) {
-            throw new SalesforceException($e->getMessage());
+        if (config('laravel-salesforce.disable_on_local') && app()->environment('local')) {
+            $response = (object)['success' => true, 'totalSize' => 0, 'id' => 'localRequestId'];
+        } else {
+            try {
+                $response = json_decode(
+                    $this->salesforce->client->request($method, $this->salesforce->baseUrl . $url, $options)
+                        ->getBody());
+            } catch (ClientException $e) {
+                throw new SalesforceException($e->getMessage());
+            }
         }
 
-
         event(new ResponseReceived([
-            'data' => $response,
-            'url'     => $url,
-            'class'   => get_class($this),
-            'type'    => 'RESPONSE',
+            'data'  => $response,
+            'url'   => $url,
+            'class' => get_class($this),
+            'type'  => 'RESPONSE',
         ]));
 
         return $response;
@@ -155,7 +158,7 @@ abstract class AbstractObject implements ObjectInterface
      * Update.
      *
      * @param  string $id
-     * @param        $params
+     * @param         $params
      * @return void
      */
     public function update(string $id, array $params)

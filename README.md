@@ -85,3 +85,10 @@ Salesforce::createAccount($params);
 Salesforce::existsAccount(['PersonEmail' => 'test@test.com']);
 
 ```
+
+## Working on local
+By default on local environment it is disabled.
+To enable the package to work on local mode:
+``` bash
+SALESFORCE_DISABLE_ON_LOCAL=false
+```
