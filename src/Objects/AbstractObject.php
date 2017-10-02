@@ -34,7 +34,7 @@ abstract class AbstractObject implements ObjectInterface
         ]));
 
         if (config('laravel-salesforce.disable_on_local') && app()->environment('local')) {
-            $response = (object)['success' => true, 'totalSize' => 0, 'id' => 'localRequestId'];
+            $response = (object)['success' => true, 'totalSize' => 0, 'id' => 'localRequestId', 'OwnerId' => 'localRequestId'];
         } else {
             try {
                 $response = json_decode(
@@ -198,15 +198,16 @@ abstract class AbstractObject implements ObjectInterface
      */
     public function delete(string $id)
     {
-        $response = $this->sendRequest('DELETE', "/sobjects/" . $this->getType() . "/$id");
-
-        if ($response->success !== true) {
-            throw new SalesforceException($response->errors);
-        }
-
-        return $response;
+        $this->sendRequest('DELETE', "/sobjects/" . $this->getType() . "/$id");
     }
 
+    /**
+     * Get report
+     *
+     * @param string $id
+     * @param bool   $includeDetails
+     * @return object
+     */
     public function report(string $id, bool $includeDetails = true)
     {
         return $this->sendRequest(
