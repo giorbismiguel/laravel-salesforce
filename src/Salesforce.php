@@ -125,6 +125,10 @@ class Salesforce
         $class = '\\Surge\\LaravelSalesforce\\Objects\\' . $type;
 
         if (class_exists($class)) {
+            if (isset($args[1])) { //second param is optional
+                return (new $class($this))->exists($args[0], $args[1]);
+            }
+
             return (new $class($this))->exists($args[0]);
         }
 

@@ -23,22 +23,26 @@ class Lead extends AbstractObject
      *   'Email' => 'test@test.com'
      * ]
      *
-     * @param string $params
+     * @param array  $params
+     * @param string $condition
      *
      * @return bool|array
      */
-    public function exists($params)
+    public function exists($params, $condition = 'AND')
     {
         //return false if not enough data provided
         if (empty($params)) {
             return false;
         }
 
-        $query = 'SELECT Id, OwnerId  FROM ' . $this->getType() . ' WHERE RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
+        $query = 'SELECT Id, OwnerId FROM ' . $this->getType() . ' WHERE RecordTypeId = \'' . config('laravel-salesforce.record_type.lead') . '\'';
 
+        $paramsWithKeys = [];
         foreach ($params as $fieldName => $fieldValue) {
-            $query .= ' AND ' . $fieldName . '=\'' . addslashes(trim($fieldValue)) . '\'';
+            $paramsWithKeys[] = $fieldName . ' = \'' . addslashes(trim($fieldValue)) . '\'';
         }
+
+        $query .= ' AND (' . implode(' ' . $condition . ' ', $paramsWithKeys) . ')';
 
         $response = $this->query($query);
 

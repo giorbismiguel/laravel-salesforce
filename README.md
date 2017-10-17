@@ -84,6 +84,9 @@ Salesforce::createAccount($params);
 //Check if account exists
 Salesforce::existsAccount(['PersonEmail' => 'test@test.com']);
 
+//To check for more than one parameter with OR condition
+Salesforce::existsAccount(['PersonEmail' => 'test@test.com', 'Phone' => '07846000111'], 'OR');
+
 ```
 
 ## Working on local
