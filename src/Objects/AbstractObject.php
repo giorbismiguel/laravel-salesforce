@@ -213,7 +213,7 @@ abstract class AbstractObject implements ObjectInterface
         return $this->sendRequest(
             'GET',
             '/analytics/reports/' . $id,
-            ['query' => ['includeDetails' => $includeDetails]]
+            ['query' => ['hasDetailRows' => $includeDetails]]
         );
     }
 }
