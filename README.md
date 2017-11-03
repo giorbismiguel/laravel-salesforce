@@ -108,3 +108,11 @@ Also if your Laravel env is local then ensure that the following key is set to f
 ``` bash
 SALESFORCE_DISABLE_ON_LOCAL=false
 ```
+## Upgrading to version 0.2.5
+Ensure that you republish the config file so that the following line appears at the top:
+``` bash
+return [
+    'auth_endpoint'   => env('SALESFORCE_AUTH_ENDPOINT'),
+    ...
+    ]
+```
