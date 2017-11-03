@@ -2,6 +2,7 @@
 
 return [
 
+    'auth_endpoint'   => env('SALESFORCE_AUTH_ENDPOINT'),
     'client_id'     => env('SALESFORCE_CLIENT_ID'),
     'client_secret' => env('SALESFORCE_CLIENT_SECRET'),
     'username'      => env('SALESFORCE_USERNAME'),

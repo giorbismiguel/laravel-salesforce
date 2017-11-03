@@ -70,6 +70,7 @@ class SalesforceAuth
      */
     private function login()
     {
+        $authEndpoint = config('laravel-salesforce.auth_endpoint');
         $body = [
             'grant_type'    => 'password',
             'client_id'     => config('laravel-salesforce.client_id'),
@@ -78,7 +79,7 @@ class SalesforceAuth
             'password'      => config('laravel-salesforce.password'),
         ];
 
-        $response = $this->client->post('https://login.salesforce.com/services/oauth2/token', [
+        $response = $this->client->post($authEndpoint, [
             'form_params' => $body,
         ])->getBody()->getContents();
 
