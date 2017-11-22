@@ -3,7 +3,6 @@
 namespace Surge\LaravelSalesforce;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 
 class SalesforceAuth
 {
@@ -52,7 +51,16 @@ class SalesforceAuth
     {
         $this->client = $client;
 
-        $this->login();
+        if (env('SALESFORCE_DISABLE_ON_LOCAL') === false) {
+            $this->login();
+        } else {
+            $this->id = '##########';
+            $this->accessToken = '@@@@@@';
+            $this->instanceUrl = 'http://localhost';
+            $this->url = 'http://localhost';
+            $this->authenticated = true;
+
+        }
     }
 
     /**
