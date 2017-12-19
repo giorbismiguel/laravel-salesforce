@@ -51,7 +51,7 @@ class SalesforceAuth
     {
         $this->client = $client;
 
-        if (env('SALESFORCE_DISABLE_ON_LOCAL') === false) {
+        if (config('laravel-salesforce.disable_on_local') === false) {
             $this->login();
         } else {
             $this->id = '##########';
