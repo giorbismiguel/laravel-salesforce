@@ -216,4 +216,23 @@ abstract class AbstractObject implements ObjectInterface
             ['query' => ['hasDetailRows' => $includeDetails]]
         );
     }
+
+
+
+    /**
+     * Get report by metadata
+     *
+     * @param string $id
+     * @param array $params
+     * @param bool $includeDetails
+     * @return object
+     */
+    public function reportByMetadata(string $id, array $params, bool $includeDetails = true)
+    {
+        return $this->sendRequest(
+            'POST',
+            '/analytics/reports/' . $id,
+            ['json' => $params, 'query' => ['hasDetailRows' => $includeDetails]]
+        );
+    }
 }

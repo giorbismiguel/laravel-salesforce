@@ -164,4 +164,17 @@ class Salesforce
     {
         return $this->report($id, $includeDetails);
     }
+
+    /**
+     * Run report by metadata
+     *
+     * @param string $id
+     * @param array $params
+     * @param bool $includeDetails
+     * @return mixed
+     */
+    public function getReportByMetadata(string $id, array $params, bool $includeDetails = true)
+    {
+        return $this->reportByMetadata($id, $params, $includeDetails);
+    }
 }
